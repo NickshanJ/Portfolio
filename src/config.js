@@ -1,7 +1,7 @@
 const config = {
-  SERVICE_ID: process.env.REACT_APP_SERVICE_ID,
-  TEMPLATE_ID: process.env.REACT_APP_TEMPLATE_ID,
-  USER_ID: process.env.REACT_APP_USER_ID,
+  SERVICE_ID: import.meta.env.VITE_SERVICE_ID,
+  TEMPLATE_ID: import.meta.env.VITE_TEMPLATE_ID,
+  USER_ID: import.meta.env.VITE_USER_ID,
 };
 
 export default config;
