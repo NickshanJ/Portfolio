@@ -57,7 +57,7 @@ function Navbar() {
           )}
         </div>
         <div
-          className={`flex-col z-50 space-y-4 mt-4 lg:mt-0 lg:flex lg:flex-row lg:space-x-24 lg:items-center lg:ml-auto font-stylish list-none ${
+          className={`flex-col z-50 space-y-4 mt-4 lg:mt-0 lg:flex lg:flex-row lg:space-x-24 lg:items-center lg:ml-auto lg:mr-6 font-stylish list-none ${
             isOpen ? "flex" : "hidden"
           }`}
         >

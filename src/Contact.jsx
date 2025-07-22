@@ -41,7 +41,7 @@ function Contact() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-gray-300">
       <div className="w-full max-w-2xl p-8">
-        <h2 className="text-center text-3xl mt-20 md:mt-10 font-stylish mb-6 animate-fadeInRight">
+        <h2 className="text-center text-3xl mt-20 md:pt-16 md:mt-10 font-stylish mb-6 animate-fadeInRight">
           Get in touch with Me
         </h2>
         <form onSubmit={sendEmail} className="space-y-6 mt-16 font-stylish animate-fadeInLeft">

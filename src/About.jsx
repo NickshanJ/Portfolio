@@ -11,17 +11,17 @@ import {
 
 function About() {
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-black p-10">
+    <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-black p-10 md:pt-28">
       {/* Left side image */}
-      <div className="w-full md:w-[40%] flex justify-center mt-20 md:mt-0 mb-10 md:mb-0 animate-fadeInLeft">
+      <div className="w-full md:w-[60%] flex justify-center mt-20 md:mt-0 mb-10 md:mb-0 animate-fadeInLeft">
         <img
           src={profileImage}
           alt="Profile"
-          className="shadow-lg w-[80%] md:w-3/4 aspect-auto border-2 border-[#fee71539] rounded-3xl transform hover:scale-105 transition-transform duration-500"
+          className="shadow-lg w-[80%] md:w-[350px] aspect-auto border-2 border-[#fee71539] rounded-3xl transform hover:scale-105 transition-transform duration-500"
         />
       </div>
       {/* Right side text */}
-      <div className="w-full md:w-[60%] text-center md:text-left text-white space-y-6 animate-fadeInRight">
+      <div className="w-full md:w-[80%] text-center md:text-left text-white space-y-6 animate-fadeInRight mx-auto">
         <h3 className="text-[33px] text-[#FEE715FF] font-stylish">
           Hello! I'm Nickshan
         </h3>
