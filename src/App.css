@@ -1,30 +1,59 @@
-@keyframes fill-text {
+
+@keyframes fadeInUp {
   0% {
-    background-position: 200%;
+    opacity: 0;
+    transform: translateY(100px);
   }
   100% {
-    background-position: -100%;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-
-.fill-text {
-  background: linear-gradient(to right, #ffffff 50%, #FEE715FF 50%); 
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: fill-text 4s linear forwards; 
-  background-size: 200% 100%;
+.animate-fadeInUp {
+  animation: fadeInUp 1s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
-
-.checkmark-container {
-  width: 100px; /* Increased size for better visibility */
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-fadeInRight {
+  animation: fadeInRight 1s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-fadeInLeft {
+  animation: fadeInLeft 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(300px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fadeInDown {
+  animation: fadeInDown 1s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
 .checkmark {
   width: 100%;
   height: 100%;

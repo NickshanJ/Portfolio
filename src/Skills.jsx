@@ -21,12 +21,16 @@ function Skills() {
     <div className="min-h-screen bg-black text-white p-10">
       <h2 className="text-4xl font-bold mb-8 mt-32 font-stylish text-center">My Skills</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 font-stylish mt-16 justify-items-center">
-        {skills.map((skill) => (
-          <div key={skill.name} className="flex flex-col items-center hover:scale-110 transition-transform space-y-4">
-            <div className="rounded-full bg-white p-4">{skill.icon}</div>
-            <p className="text-xl">{skill.name}</p>
-          </div>
-        ))}
+        {skills.map((skill, idx) => {
+          // 5 columns per row, so idx < 5 is first row, idx >= 5 is second row
+          const animationClass = idx < 5 ? 'animate-fadeInRight' : 'animate-fadeInLeft';
+          return (
+            <div key={skill.name} className={`flex flex-col items-center hover:scale-110 transition-transform space-y-4 ${animationClass}`} style={{ animationDelay: `${idx * 0.1 + (idx < 5 ? 0 : 0.5)}s` }}>
+              <div className="rounded-full bg-white p-4">{skill.icon}</div>
+              <p className="text-xl">{skill.name}</p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

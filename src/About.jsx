@@ -13,7 +13,7 @@ function About() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-black p-10">
       {/* Left side image */}
-      <div className="w-full md:w-[40%] flex justify-center mt-20 md:mt-0 mb-10 md:mb-0">
+      <div className="w-full md:w-[40%] flex justify-center mt-20 md:mt-0 mb-10 md:mb-0 animate-fadeInLeft">
         <img
           src={profileImage}
           alt="Profile"
@@ -21,7 +21,7 @@ function About() {
         />
       </div>
       {/* Right side text */}
-      <div className="w-full md:w-[60%] text-center md:text-left text-white space-y-6">
+      <div className="w-full md:w-[60%] text-center md:text-left text-white space-y-6 animate-fadeInRight">
         <h3 className="text-[33px] text-[#FEE715FF] font-stylish">
           Hello! I'm Nickshan
         </h3>

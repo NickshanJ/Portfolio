@@ -99,7 +99,7 @@ function Projects() {
 
   return (
     <div className="min-h-screen bg-black text-white font-stylish p-10">
-      <h2 className="text-4xl font-bold mb-8 mt-64 md:mt-28 text-center">
+      <h2 className="text-4xl font-bold mb-8 mt-20 md:mt-14 text-center">
         My Projects
       </h2>
       <Carousel
@@ -113,60 +113,76 @@ function Projects() {
         itemClass="px-4"
         arrows={false}
       >
-        {projects.map((project, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center bg-gray-800 rounded-lg p-4 cursor-pointer transition-transform"
-            onClick={() => window.open(project.url, "_blank")}
-          >
-            <img
-              src={project.img}
-              alt={project.alt}
-              className="rounded-lg h-50 object-cover mb-4"
-            />
-            <p className="text-center font-semibold text-xl">
-              {project.text}
-            </p>
-
-            <p className="text-gray-400 mt-2 text-center">
-              {project.description}
-            </p>
-
-            <ul className="flex gap-2 mt-2">
-              {project.skills &&
-                project.skills.map((skill, idx) => (
-                  <li key={idx} className="bg-gray-700 px-2 py-1 rounded-md">
-                    {skill}
-                  </li>
-                ))}
-            </ul>
-
-            {/* Code Links */}
-            {project.codeLinks && (
-              <div className="flex gap-4 mt-2">
-                <a
-                  href={project.codeLinks.frontend}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Frontend
-                </a>
-                <a
-                  href={project.codeLinks.backend}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Backend
-                </a>
-              </div>
-            )}
-
-          </div>
-        ))}
+        {projects.map((project, index) => {
+          // Animation logic based on visible position
+          let animationClass = "";
+          // Desktop: 3 items, Tablet: 2, Mobile: 1
+          // We use index % itemsPerView to determine position
+          // But since Carousel handles visible items, we animate all
+          if (window.innerWidth >= 1024) {
+            // Desktop: 3 items
+            if (index % 3 === 0) animationClass = "animate-fadeInLeft";
+            else if (index % 3 === 1) animationClass = "animate-fadeInDown";
+            else if (index % 3 === 2) animationClass = "animate-fadeInRight";
+          } else if (window.innerWidth >= 464) {
+            // Tablet: 2 items
+            if (index % 2 === 0) animationClass = "animate-fadeInLeft";
+            else animationClass = "animate-fadeInRight";
+          } else {
+            // Mobile: 1 item
+            animationClass = "animate-fadeInDown";
+          }
+          return (
+            <div
+              key={index}
+              className={`flex flex-col items-center bg-gray-800 rounded-lg p-4 cursor-pointer transition-transform ${animationClass}`}
+              onClick={() => window.open(project.url, "_blank")}
+            >
+              <img
+                src={project.img}
+                alt={project.alt}
+                className="rounded-lg h-40 object-cover mb-4"
+              />
+              <p className="text-center font-semibold text-xl">
+                {project.text}
+              </p>
+              <p className="text-gray-400 mt-2 text-center">
+                {project.description}
+              </p>
+              <ul className="flex md:flex-nowrap flex-wrap gap-1 mt-2 justify-center">
+                {project.skills &&
+                  project.skills.map((skill, idx) => (
+                    <li key={idx} className="bg-gray-700 px-1 sm:px-2 md:px-0 md:py-2 py-1 rounded-md">
+                      {skill}
+                    </li>
+                  ))}
+              </ul>
+              {/* Code Links */}
+              {project.codeLinks && (
+                <div className="flex gap-4 mt-2">
+                  <a
+                    href={project.codeLinks.frontend}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Frontend
+                  </a>
+                  <a
+                    href={project.codeLinks.backend}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Backend
+                  </a>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </Carousel>
       <div className="flex justify-center mt-8">
         <button

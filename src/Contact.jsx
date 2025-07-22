@@ -41,11 +41,11 @@ function Contact() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-gray-300">
       <div className="w-full max-w-2xl p-8">
-        <h2 className="text-center text-3xl mt-10 font-stylish mb-6">
+        <h2 className="text-center text-3xl mt-16 md:mt-10 font-stylish mb-6 animate-fadeInRight">
           Get in touch with Me
         </h2>
-        <form onSubmit={sendEmail} className="space-y-6 mt-16 font-stylish">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={sendEmail} className="space-y-6 mt-16 font-stylish animate-fadeInLeft">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-xl mb-1" htmlFor="from_name">
                 Your Name (required)
@@ -94,39 +94,41 @@ function Contact() {
       </div>
 
       {/* Footer Section */}
-      <footer className="w-full px-8 py-4 border-t border-gray-500 flex justify-between items-start">
-        {/* Left side */}
-        <div className="flex space-x-6">
-          <a
-            href="https://www.linkedin.com/in/nickshanj/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-300 hover:scale-110 transition-transform hover:text-blue-600"
-          >
-            <FaLinkedin size={32} />
-          </a>
-          <a
-            href="https://github.com/NickshanJ"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-300 hover:scale-110 transition-transform hover:text-[#FEE715FF]"
-          >
-            <FaGithub size={32} />
-          </a>
-        </div>
-
-        {/* Right side */}
-        <div className="text-gray-300 text-right">
-          Email - nickshan001@gmail.com
-          <div className="text-gray-500 mt-2">
-            Illustrations by <a
-              href="https://storyset.com/"
+      <footer className="w-full px-4 py-4 flex flex-col items-center animate-fadeInUp">
+        <div className="w-2/3 mx-auto border-t border-gray-500"></div>
+        <div className="w-full flex flex-col md:flex-row md:justify-around items-center md:items-start mt-4 gap-4">
+          {/* Left side */}
+          <div className="flex space-x-6 justify-center md:justify-start w-full md:w-auto">
+            <a
+              href="https://www.linkedin.com/in/nickshanj/"
               target="_blank"
-              rel="nofollow noopener noreferrer"
-              className="hover:underline"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:scale-110 transition-transform hover:text-blue-600"
             >
-              Storyset
-            </a>.
+              <FaLinkedin size={32} />
+            </a>
+            <a
+              href="https://github.com/NickshanJ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:scale-110 transition-transform hover:text-[#FEE715FF]"
+            >
+              <FaGithub size={32} />
+            </a>
+          </div>
+          {/* Right side */}
+          <div className="text-gray-300 text-center md:text-right w-full md:w-auto">
+            Email - nickshan001@gmail.com
+            <div className="text-gray-500 mt-2">
+              Illustrations by <a
+                href="https://storyset.com/"
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                className="hover:underline"
+              >
+                Storyset
+              </a>.
+            </div>
           </div>
         </div>
       </footer>
