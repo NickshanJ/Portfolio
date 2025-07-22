@@ -61,7 +61,7 @@ Prerequisites Basic knowledge of React.js
 
 Installation:
 
-git clone https://github.com/NickshanJ/Protfolio.git
+git clone https://github.com/NickshanJ/Portfolio.git
 
 cd Protfolio
 
