@@ -1,17 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import logo from "./image/Logo.png";
 import { FaBars } from "react-icons/fa";
 
 function Navbar() {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useLayoutEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    // Set window width immediately on mount and on route change
+    setWindowWidth(window.innerWidth);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (window.innerWidth < 1024) { // mobile & tablet only
+      if (windowWidth < 1024) { // mobile & tablet only
         if (currentScrollY > lastScrollY && currentScrollY > 50) {
           setShowNavbar(false); // scroll down, hide
         } else {
@@ -22,7 +32,7 @@ function Navbar() {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [lastScrollY, windowWidth]);
 
   const handleNavClick = () => {
     setIsOpen(false);
@@ -31,18 +41,20 @@ function Navbar() {
   return (
     <>
       {/* Overlay for mobile/tablet menu */}
-      {isOpen && window.innerWidth < 1024 && (
+      {isOpen && windowWidth < 1024 && (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-40 transition-opacity duration-300"></div>
       )}
       <div className={`bg-transparent text-white p-4 flex flex-col lg:flex-row justify-between items-center fixed w-full transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} z-50`}>
         <div className="flex justify-between w-full lg:w-auto">
           <img className="w-52 h-20 ml-4" src={logo} alt="Logo" />
-          <div
-            className="flex items-center lg:hidden"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <FaBars size={30} />
-          </div>
+          {windowWidth < 1024 && (
+            <div
+              className="flex items-center lg:hidden"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <FaBars size={30} />
+            </div>
+          )}
         </div>
         <div
           className={`flex-col z-50 space-y-4 mt-4 lg:mt-0 lg:flex lg:flex-row lg:space-x-24 lg:items-center lg:ml-auto font-stylish list-none ${

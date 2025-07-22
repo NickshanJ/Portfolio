@@ -6,13 +6,14 @@ function Modal({ isVisible, message, onClose }) {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-75 z-50">
-      <div className="bg-gradient-to-r from-[#141E30] to-[#243B55] text-white p-10 rounded-xl shadow-2xl max-w-sm w-full text-center animate-fade-in">
+      <div className="bg-gradient-to-r from-[#141E30] to-[#243B55] text-white p-6 rounded-lg shadow-2xl max-w-xs w-full text-center animate-fade-in">
         {/* Checkmark animation */}
-        <div className="checkmark-container mx-auto mb-6">
+        <div className="checkmark-container mx-auto mb-4" style={{ width: '60px', height: '60px' }}>
           <svg
             viewBox="0 0 64 64"
             xmlns="http://www.w3.org/2000/svg"
             className="checkmark"
+            style={{ width: '60px', height: '60px' }}
           >
             <circle
               className="checkmark-circle"
@@ -29,11 +30,11 @@ function Modal({ isVisible, message, onClose }) {
           </svg>
         </div>
         {/* Message */}
-        <p className="text-lg mb-6">{message}</p>
+        <p className="text-base mb-4">{message}</p>
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="bg-[#FEE715FF] text-black px-6 py-2 rounded-full font-bold hover:scale-105 transition-transform hover:shadow-md hover:bg-[#FEDD5C]"
+          className="bg-[#FEE715FF] text-black px-4 py-1 rounded-full font-bold hover:scale-105 transition-transform hover:shadow-md hover:bg-[#FEDD5C]"
         >
           Close
         </button>

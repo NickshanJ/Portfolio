@@ -1,5 +1,5 @@
 import React from "react";
-import backgroundImage from "./image/HomeBG.jpg";
+import backgroundImage from "./image/HomeBG.webp";
 import DynamicText from "./DynamicText";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
 import "./App.css";

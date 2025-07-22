@@ -18,7 +18,7 @@ function Skills() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white p-10">
+    <div className="min-h-screen bg-black text-white p-10 pt-10">
       <h2 className="text-4xl font-bold mb-8 mt-32 font-stylish text-center">My Skills</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 font-stylish mt-16 justify-items-center">
         {skills.map((skill, idx) => {

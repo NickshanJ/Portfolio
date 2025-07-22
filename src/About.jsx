@@ -1,5 +1,5 @@
 import React from "react";
-import profileImage from "./image/About Page.png";
+import profileImage from "./image/About Page.webp";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
 import {
   FaLinkedin,
