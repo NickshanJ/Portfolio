@@ -1,98 +1,181 @@
-Portfolio of J. Nickshan
+# Nickshan J — Portfolio V4
 
-Welcome to my personal portfolio! This project showcases my skills as a MERN Full Stack Developer and provides a platform for visitors to get in touch with me, explore my work, and learn more about me.
+A personal developer portfolio built with **React + Vite**, featuring a deep black & electric cyan design, separate page routing, and a fully responsive layout. Each page is designed to fit the screen on desktop without requiring scrolling.
 
-🚀 Features Dynamic Design: 
+---
 
-Dynamic Design: Responsive layout optimized for desktop and mobile views.
+## 🚀 Live Features
 
-Interactive UI: Engaging animations, hover effects, and modals to enhance user experience.
+- **Full-viewport pages** — Home, About, Skills, and Contact each fit the screen on desktop. No scrolling needed.
+- **Separate page routing** — Each section is a standalone page (React Router DOM).
+- **Projects tab switcher** — Click numbered tabs to switch between projects. Mini-card previews for other projects shown below.
+- **Terminal card on Home** — An animated bash terminal on the right side of the home page showing skills, git log, and server status.
+- **Typing animation** — Role titles cycle through: Front-End Developer → MERN Full Stack Developer → React Specialist.
+- **Responsive design** — Stacks vertically on tablet and mobile. Terminal card moves below text. About image centered and full-width on smaller screens.
+- **EmailJS contact form** — Working contact form with modal success/error notification.
+- **Animated cyan checkmark modal** — Appears on successful message send.
 
-Contact Form: Functional email form using EmailJS with success/error modal notifications.
+---
 
-Dynamic Text Animation: Professional role titles dynamically typed out using JavaScript.
+## 🎨 Design System
 
-Social Media Integration: Quick links to LinkedIn, GitHub, Email, and WhatsApp.
+| Property   | Value                        |
+|------------|------------------------------|
+| Background | `#020207` (deep black)       |
+| Accent     | `#00D4FF` (electric cyan)    |
+| Heading    | Space Grotesk (700)          |
+| Body       | Space Grotesk (400/500)      |
+| Mono/Code  | Space Mono                   |
+| Cards      | `rgba(255,255,255,0.03)` glass |
+| Dot grid   | Global CSS background pattern |
 
-Optimized Styling: Built with TailwindCSS for sleek and consistent designs.
+---
 
-🎨 Pages and Components HomePage: 
+## 📄 Pages & Components
 
-HomePage: Introduction with a dynamic typing effect to highlight professional roles.
+### 🏠 Home (`/`)
+- Left column: Status badge, name, typing role, description, CTA buttons (Resume + View Projects), stats (4+ Projects, 10+ Technologies, 2+ Years)
+- Right column: Animated bash terminal card — shows `whoami`, `cat skills.json`, `git log`, and server status
+- Terminal hidden → stacks below text on tablet/mobile
 
-About Page: Showcasing a detailed biography with a professional profile picture and download link for the CV.
+### 👤 About (`/about`)
+- Left: Profile photo with cyan glow border, MERN badge, social icon links (LinkedIn, GitHub, Email, WhatsApp)
+- Right: Expanded bio (3 paragraphs), 2×2 info grid (Name, Role, Location, Email), Download Resume + Get In Touch buttons
+- Tablet/Mobile: Photo centred at full width, content below
 
-Contact Page: Get in touch via a secure and user-friendly contact form.
+### 🛠 Skills (`/skills`)
+- 4-column responsive grid (3-col tablet, 2-col mobile)
+- 11 skills: HTML5, CSS3, Tailwind CSS, JavaScript, React.js, Node.js, Express.js, MongoDB, MySQL, GitHub, **Postman**
+- Each tile has top cyan bar sweep on hover, brand colour icon glow
 
-🛠️ Technologies Used Front-End: 
+### 📁 Projects (`/projects`)
+- Numbered tab switcher: `01 — Vehicle Rental`, `02 — Movies Search`, `03 — Student Portal`, `04 — Event System`
+- Mobile: tabs show numbers only (`01`, `02`, `03`, `04`) to save space
+- Active project: large showcase split card (image left, info right)
+- Mini-grid preview of the other 3 projects below
+- Page is scrollable (more projects can be added easily)
 
-React.js, TailwindCSS
+**Current Projects:**
+1. **Online Vehicle Rental** — MongoDB, Express, React, Node.js, Tailwind, Razorpay
+2. **Movies Search App** — React, JavaScript, HTML, CSS, Tailwind CSS
+3. **Student Teacher Portal** — MongoDB, Express, React, Node.js, Tailwind CSS
+4. **Event Management System** — MongoDB, Express, React, Node.js, Tailwind CSS
 
-Back-End: EmailJS for handling contact forms
+### 📬 Contact (`/contact`)
+- Left: Intro paragraph + 4 clickable contact rows (Email, LinkedIn, GitHub, WhatsApp) with hover slide animation
+- Right: Glass-card form — Name, Email, Message, Send button
+- Footer: copyright + social icon links
+- Page fits screen on desktop without scrolling
 
-Icons: React Icons
+---
 
-Hosting: (Add details here, e.g., Vercel, Netlify, or GitHub Pages)
+## 🛠️ Technologies Used
 
-📂 Folder Structure 
+**Frontend:** React.js, React Router DOM, Tailwind CSS, Space Grotesk, Space Mono
 
-.
-├── src
-│   ├── assets/                # Images and static files (e.g., profile image, CV)
-│   ├── components/            # Reusable React components
-│   │   ├── Modal.jsx          # Reusable modal component
-│   │   └── DynamicText.jsx    # Dynamic typing effect
-│   ├── App.jsx                # Main app entry point
-│   ├── index.js               # Main ReactDOM render
-│   ├── styles/                # Custom CSS files
-│   │   └── Modal.css          # Styles for the modal animation
-│   └── pages/                 # Individual pages
-│       ├── HomePage.jsx       # Home page
-│       ├── About.jsx          # About me page
-│       └── Contact.jsx        # Contact form page
-├── public/                    # Public static files
-│   └── assets/                # Public assets (e.g., Nickshan_Resume.pdf)
-└── .env                       # Environment variables (not included in source control)
+**Icons:** React Icons (FaLinkedin, FaGithub, SiPostman, FiSend, etc.)
 
+**Email:** EmailJS (emailjs-com)
 
-🌟 Getting Started Follow these instructions to run the portfolio locally:
+**Build Tool:** Vite
 
-Prerequisites Basic knowledge of React.js
+**Deployment:** Netlify
 
-Installation:
+---
 
+## 📂 Folder Structure
+
+```
+portfolio/
+├── public/
+│   └── _redirects
+├── src/
+│   ├── assets/
+│   │   ├── icon.png
+│   │   └── Resume - Nickshan J.pdf
+│   ├── image/
+│   │   ├── About Page.webp
+│   │   ├── HomeBG.webp
+│   │   ├── Vehicle Rental.png
+│   │   ├── Movies Search.png
+│   │   ├── Portal.png
+│   │   └── Event.png
+│   ├── App.css          ← Full design system (black + cyan theme)
+│   ├── App.jsx          ← Root router
+│   ├── main.jsx         ← Entry point
+│   ├── config.js        ← EmailJS env config
+│   ├── DynamicText.jsx  ← Typing animation component
+│   ├── Navbar.jsx       ← Fixed navbar with mobile overlay menu
+│   ├── Modal.jsx        ← Success/error modal with cyan checkmark
+│   ├── Home.jsx         ← Home page (terminal card)
+│   ├── About.jsx        ← About page (photo + bio)
+│   ├── Skills.jsx       ← Skills grid (11 technologies)
+│   ├── Projects.jsx     ← Tab-switcher project showcase
+│   └── Contact.jsx      ← Contact form + footer
+├── index.html
+├── tailwind.config.js
+├── vite.config.js
+├── postcss.config.js
+└── .env                 ← EmailJS keys (not in repo)
+```
+
+---
+
+## 🌟 Getting Started
+
+### Prerequisites
+- Node.js ≥ 18
+- npm
+
+### Installation
+
+```bash
 git clone https://github.com/NickshanJ/Portfolio.git
+cd portfolio
+npm install
+```
 
-cd Protfolio
+### Environment Setup
 
-Install dependencies: npm install Create a .env file in the root directory and add the following:
+Create a `.env` file in the root:
 
-REACT_APP_SERVICE_ID=your_service_id
-REACT_APP_TEMPLATE_ID=your_template_id
-REACT_APP_USER_ID=your_user_id
+```env
+VITE_SERVICE_ID=your_emailjs_service_id
+VITE_TEMPLATE_ID=your_emailjs_template_id
+VITE_USER_ID=your_emailjs_user_id
+```
 
-Start the development server:
+### Run Locally
 
-npm start Visit http://localhost:3000 in your browser to view the portfolio.
+```bash
+npm run dev
+```
 
-🛡️ Security 
+Visit `http://localhost:5173`
 
-Your EmailJS keys (Service ID, Template ID, and User ID) are securely stored using environment variables and are not exposed in the repository. Ensure the .env file is listed in .gitignore.
+### Build for Production
 
-📬 Contact 
+```bash
+npm run build
+```
 
-Feel free to reach out or connect with me:
+---
 
-LinkedIn: J. Nickshan
+## 🛡️ Security
 
-GitHub: NickshanJ
+EmailJS credentials are stored in `.env` and excluded from version control via `.gitignore`.
 
-Email: nickshan001@gmail.com
+---
 
-WhatsApp: Message me
+## 📬 Contact
 
-🎉 Acknowledgments 
+| Channel  | Link |
+|----------|------|
+| LinkedIn | [linkedin.com/in/nickshanj](https://www.linkedin.com/in/nickshanj/) |
+| GitHub   | [github.com/NickshanJ](https://github.com/NickshanJ) |
+| Email    | nickshan001@gmail.com |
+| WhatsApp | +91 73581 76388 |
 
-Special thanks to TailwindCSS and React Icons for enhancing the UI/UX.
+---
 
-Powered by EmailJS for effortless form handling.
+*Built with React & Tailwind CSS — Illustrations by [Storyset](https://storyset.com/)*

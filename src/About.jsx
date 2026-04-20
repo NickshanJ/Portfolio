@@ -1,87 +1,146 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { FaLinkedin, FaGithub, FaEnvelope, FaWhatsapp } from "react-icons/fa";
+import { FiDownload, FiMail } from "react-icons/fi";
 import profileImage from "./image/About Page.webp";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
-import {
-  FaLinkedin,
-  FaGithub,
-  FaEnvelope,
-  FaWhatsapp,
-  FaDownload,
-} from "react-icons/fa";
+import "./App.css";
 
-function About() {
+const SOCIALS = [
+  { Icon: FaLinkedin, href: "https://www.linkedin.com/in/nickshanj/", label: "LinkedIn"  },
+  { Icon: FaGithub,   href: "https://github.com/NickshanJ",           label: "GitHub"    },
+  { Icon: FaEnvelope, href: "mailto:nickshan001@gmail.com",           label: "Email"     },
+  { Icon: FaWhatsapp, href: "https://wa.me/7358176388",               label: "WhatsApp"  },
+];
+
+const META = [
+  { label: "Name",      value: "J. Nickshan"           },
+  { label: "Role",      value: "Full Stack Developer"   },
+  { label: "Location",  value: "Tamil Nadu, India"      },
+  { label: "Email",     value: "nickshan001@gmail.com"  },
+];
+
+export default function About() {
+  useEffect(() => {
+    document.body.classList.remove("allow-scroll");
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row items-center justify-center bg-black p-10 md:pt-28">
-      {/* Left side image */}
-      <div className="w-full md:w-[60%] flex justify-center mt-20 md:mt-0 mb-10 md:mb-0 animate-fadeInLeft">
-        <img
-          src={profileImage}
-          alt="Profile"
-          className="shadow-lg w-[80%] md:w-[350px] aspect-auto border-2 border-[#fee71539] rounded-3xl transform hover:scale-105 transition-transform duration-500"
-        />
-      </div>
-      {/* Right side text */}
-      <div className="w-full md:w-[80%] text-center md:text-left text-white space-y-6 animate-fadeInRight mx-auto">
-        <h3 className="text-[33px] text-[#FEE715FF] font-stylish">
-          Hello! I'm Nickshan
-        </h3>
-        <p className="text-[22px] font-stylish">
-          I'm a passionate Full Stack Developer with a talent for developing
-          ideas into great digital experiences. I enjoy designing visually
-          beautiful and user-friendly websites, and I am interested in both
-          front-end and back-end development. Having worked with HTML5, CSS3,
-          JavaScript, Tailwind, React.js, Node.js, Mongo DB, and Git, I'm
-          excited to add new perspectives and energy to any team. What I value
-          most about web development is the combination of creativity and
-          rationality required.Each step of the process provides an opportunity
-          for learning and growth. I am interested about staying current with
-          industry innovations and continually developing my skills. Please feel
-          free to contact me..
-        </p>
-        <div className="flex justify-center md:justify-start space-x-4">
-          <a
-            href={resumePDF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xl flex text-black bg-white px-2 py-1 rounded-[100px] hover:bg-[#FEE715FF] hover:scale-110 transition-transform items-center font-stylish"
-          >
-            <FaDownload className="mr-2" />
-            Resume
-          </a>
-          {/* <a
-            href="https://www.linkedin.com/in/nickshanj/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xl flex items-center"
-          >
-            <FaLinkedin className="mr-2 text-[25px] hover:scale-110 transition-transform hover:text-blue-600" />
-          </a>
-          <a
-            href="mailto:nickshan001@gmail.com"
-            className="text-xl flex items-center"
-          >
-            <FaEnvelope className="mr-2 text-[25px] hover:scale-110 transition-transform hover:text-red-600" />
-          </a>
-          <a
-            href="https://github.com/NickshanJ"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xl flex items-center"
-          >
-            <FaGithub className="mr-2 text-[25px] hover:scale-110 transition-transform hover:text-[#FEE715FF]" />
-          </a>
-          <a
-            href="https://wa.me/7358176388"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xl flex items-center"
-          >
-            <FaWhatsapp className="mr-2 text-[25px] hover:scale-110 transition-transform hover:text-green-400" />
-          </a> */}
+    <div className="page-wrap">
+      <div className="page-inner">
+        <div className="sec-label">About Me</div>
+        <h2 className="sec-title">
+          The Developer <span className="cyan">Behind the Code</span>
+        </h2>
+
+        <div className="about-grid">
+
+          {/* ── Photo column ── */}
+          <div className="anim-left about-photo-col">
+            <div className="about-photo-wrap">
+              <img src={profileImage} alt="Nickshan J" />
+              <div className="about-badge">
+                MERN<br />Full Stack<br />Developer
+              </div>
+            </div>
+            <div className="about-socials">
+              {SOCIALS.map(({ Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="soc-btn"
+                  title={label}
+                >
+                  <Icon size={15} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Content column ── */}
+          <div className="anim-right">
+            <p className="about-bio">
+              I'm a passionate <strong>Full Stack Developer</strong> who thrives on
+              turning ideas into polished, real-world digital products. I specialise
+              in the <strong>MERN stack</strong> and have a strong eye for clean,
+              accessible UI design that users actually enjoy.
+            </p>
+            <p className="about-bio">
+              I enjoy every part of the development journey — from architecting
+              <strong> scalable back-end APIs</strong> and designing efficient
+              database schemas, to crafting <strong>pixel-perfect interfaces</strong>{" "}
+              that feel smooth and responsive across all devices. I believe great
+              software is built at the intersection of creativity and technical
+              excellence.
+            </p>
+            <p className="about-bio">
+              With hands-on experience in <strong>React.js, Node.js, Express,
+              MongoDB, MySQL</strong>, and tools like Postman and Git, I'm always
+              looking to grow, collaborate, and contribute meaningful work. I stay
+              current with industry trends and love exploring new technologies that
+              make development faster and more enjoyable.
+            </p>
+
+            {/* Info grid */}
+            <div className="about-meta">
+              {META.map(({ label, value }) => (
+                <div key={label} className="meta-item">
+                  <div className="meta-lbl">{label}</div>
+                  <div className="meta-val">{value}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA buttons */}
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+              <a
+                href={resumePDF}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <button className="btn-cyan">
+                  <FiDownload size={13} /> Download Resume
+                </button>
+              </a>
+              <a href="mailto:nickshan001@gmail.com" style={{ textDecoration: "none" }}>
+                <button className="btn-outline">
+                  <FiMail size={13} /> Get In Touch
+                </button>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Responsive fix — inline so it's scoped to this page */}
+      <style>{`
+        /* Tablet & mobile: stack vertically, image centred & bigger */
+        @media (max-width: 820px) {
+          .about-grid {
+            grid-template-columns: 1fr !important;
+            gap: 32px !important;
+          }
+          .about-photo-col {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          .about-photo-wrap {
+            width: 100% !important;
+            max-width: 320px !important;
+            margin: 0 auto !important;
+          }
+          .about-photo-wrap img {
+            width: 100% !important;
+            height: auto !important;
+          }
+          .about-socials {
+            justify-content: center !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
-
-export default About;

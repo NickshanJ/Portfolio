@@ -1,38 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-function DynamicText({ texts, typingSpeed = 100, pauseDuration = 2000 }) {
-  const [displayText, setDisplayText] = useState('');
-  const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+function DynamicText({ texts, typingSpeed = 65, pauseDuration = 1800 }) {
+  const [display, setDisplay]   = useState("");
+  const [idx, setIdx]           = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    let typingTimeout;
-
-    if (!isDeleting) {
-      if (displayText.length < texts[currentTextIndex].length) {
-        typingTimeout = setTimeout(() => {
-          setDisplayText(texts[currentTextIndex].substring(0, displayText.length + 1));
-        }, typingSpeed);
+    const t = setTimeout(() => {
+      if (!deleting) {
+        if (display.length < texts[idx].length) {
+          setDisplay(texts[idx].slice(0, display.length + 1));
+        } else {
+          setTimeout(() => setDeleting(true), pauseDuration);
+        }
       } else {
-        typingTimeout = setTimeout(() => {
-          setIsDeleting(true);
-        }, pauseDuration);
+        if (display.length > 0) {
+          setDisplay(display.slice(0, -1));
+        } else {
+          setDeleting(false);
+          setIdx((idx + 1) % texts.length);
+        }
       }
-    } else {
-      if (displayText.length > 0) {
-        typingTimeout = setTimeout(() => {
-          setDisplayText(displayText.substring(0, displayText.length - 1));
-        }, typingSpeed);
-      } else {
-        setIsDeleting(false);
-        setCurrentTextIndex((currentTextIndex + 1) % texts.length);
-      }
-    }
+    }, typingSpeed);
+    return () => clearTimeout(t);
+  }, [display, deleting, idx, texts, typingSpeed, pauseDuration]);
 
-    return () => clearTimeout(typingTimeout);
-  }, [displayText, isDeleting, texts, typingSpeed, pauseDuration, currentTextIndex]);
-
-  return <span>{displayText}</span>;
+  return <span className="typed">{display}</span>;
 }
 
 export default DynamicText;
