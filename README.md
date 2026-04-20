@@ -15,6 +15,8 @@ A personal developer portfolio built with **React + Vite**, featuring a deep bla
 - **EmailJS contact form** — Working contact form with modal success/error notification.
 - **Animated cyan checkmark modal** — Appears on successful message send.
 
+- Live - https://nickshanjportfolio.netlify.app/
+
 ---
 
 ## 🎨 Design System
