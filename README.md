@@ -1,4 +1,4 @@
-# Nickshan J — Portfolio V4
+# Nickshan J — Portfolio
 
 A personal developer portfolio built with **React + Vite**, featuring a deep black & electric cyan design, separate page routing, and a fully responsive layout. Each page is designed to fit the screen on desktop without requiring scrolling.
 
@@ -14,6 +14,8 @@ A personal developer portfolio built with **React + Vite**, featuring a deep bla
 - **Responsive design** — Stacks vertically on tablet and mobile. Terminal card moves below text. About image centered and full-width on smaller screens.
 - **EmailJS contact form** — Working contact form with modal success/error notification.
 - **Animated cyan checkmark modal** — Appears on successful message send.
+
+- Live - https://nickshanjportfolio.netlify.app/
 
 ---
 
