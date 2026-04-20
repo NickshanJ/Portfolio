@@ -1,4 +1,4 @@
-# Nickshan J — Portfolio V4
+# Nickshan J — Portfolio
 
 A personal developer portfolio built with **React + Vite**, featuring a deep black & electric cyan design, separate page routing, and a fully responsive layout. Each page is designed to fit the screen on desktop without requiring scrolling.
 
