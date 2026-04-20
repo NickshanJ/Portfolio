@@ -4,8 +4,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'trade-winds': ['Trade Winds', 'cursive'],
-        'stylish': ['Stylish', 'sans-serif'],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+        mono:    ['"Space Mono"', 'monospace'],
+        'trade-winds': ['"Trade Winds"', 'cursive'],
+        stylish: ['Stylish', 'sans-serif'],
+      },
+      colors: {
+        cyan: '#00D4FF',
       },
     },
   },

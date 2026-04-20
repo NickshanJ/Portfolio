@@ -1,75 +1,71 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "./image/Logo.png";
-import { FaBars } from "react-icons/fa";
+import { FiMenu, FiX } from "react-icons/fi";
+import resumePDF from "./assets/Resume - Nickshan J.pdf";
+import "./App.css";
 
-function Navbar() {
-  const location = useLocation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+const LINKS = [
+  { to: "/",         label: "Home"     },
+  { to: "/about",    label: "About"    },
+  { to: "/skills",   label: "Skills"   },
+  { to: "/projects", label: "Projects" },
+  { to: "/contact",  label: "Contact"  },
+];
 
-  useLayoutEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    // Set window width immediately on mount and on route change
-    setWindowWidth(window.innerWidth);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [location]);
+export default function Navbar() {
+  const { pathname } = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen]         = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (windowWidth < 1024) { // mobile & tablet only
-        if (currentScrollY > lastScrollY && currentScrollY > 50) {
-          setShowNavbar(false); // scroll down, hide
-        } else {
-          setShowNavbar(true); // scroll up, show
-        }
-        setLastScrollY(currentScrollY);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY, windowWidth]);
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
+  }, []);
 
-  const handleNavClick = () => {
-    setIsOpen(false);
-  };
+  useEffect(() => setOpen(false), [pathname]);
 
   return (
     <>
-      {/* Overlay for mobile/tablet menu */}
-      {isOpen && windowWidth < 1024 && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 z-40 transition-opacity duration-300"></div>
-      )}
-      <div className={`bg-transparent text-white p-4 flex flex-col lg:flex-row justify-between items-center fixed w-full transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} z-50`}>
-        <div className="flex justify-between w-full lg:w-auto">
-          <img className="w-52 h-20 ml-4" src={logo} alt="Logo" />
-          {windowWidth < 1024 && (
-            <div
-              className="flex items-center lg:hidden"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <FaBars size={30} />
-            </div>
-          )}
-        </div>
-        <div
-          className={`flex-col z-50 space-y-4 mt-4 lg:mt-0 lg:flex lg:flex-row lg:space-x-24 lg:items-center lg:ml-auto lg:mr-6 font-stylish list-none ${
-            isOpen ? "flex" : "hidden"
-          }`}
-        >
-          <li className="text-2xl mt-4 hover:text-[#d4af37]" onClick={handleNavClick}><Link to="/">Home</Link></li>
-          <li className="text-2xl hover:text-[#d4af37]" onClick={handleNavClick}><Link to="/about">About</Link></li>
-          <li className="text-2xl hover:text-[#d4af37]" onClick={handleNavClick}><Link to="/skills">Skills</Link></li>
-          <li className="text-2xl hover:text-[#d4af37]" onClick={handleNavClick}><Link to="/projects">Projects</Link></li>
-          <li className="text-2xl hover:text-[#d4af37]" onClick={handleNavClick}><Link to="/contact">Contact</Link></li>
-        </div>
+      <nav className={`navbar ${scrolled ? "solid" : ""}`}>
+        <Link to="/" className="nav-logo" style={{ textDecoration: "none" }}>
+          NJ<span>.</span>dev
+        </Link>
+
+        <ul className="nav-links">
+          {LINKS.map(({ to, label }) => (
+            <li key={to}>
+              <Link
+                to={to}
+                className={`nav-a ${pathname === to ? "active" : ""}`}
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <a href={resumePDF} target="_blank" rel="noopener noreferrer" className="nav-pill">
+          Resume ↗
+        </a>
+
+        <button className="nav-burger" onClick={() => setOpen(true)} aria-label="Open menu">
+          <FiMenu />
+        </button>
+      </nav>
+
+      {/* Mobile fullscreen menu */}
+      <div className={`mob-menu ${open ? "open" : ""}`}>
+        <button className="mob-close" onClick={() => setOpen(false)} aria-label="Close">
+          <FiX />
+        </button>
+        {LINKS.map(({ to, label }) => (
+          <Link key={to} to={to} onClick={() => setOpen(false)}>{label}</Link>
+        ))}
+        <a href={resumePDF} target="_blank" rel="noopener noreferrer" className="btn-cyan" style={{ marginTop: "0.5rem" }}>
+          Download Resume
+        </a>
       </div>
     </>
   );
 }
-
-export default Navbar;
