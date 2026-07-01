@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { FiExternalLink, FiCode } from "react-icons/fi";
-import MoviesSearch  from "./image/Movies Search.png";
+import MoviesSearch from "./image/Movies Search.png";
 import VehicleRental from "./image/Vehicle Rental.png";
-import Portal        from "./image/Portal.png";
-import Event         from "./image/Event.png";
+import Portal from "./image/Portal.png";
+import Event from "./image/Event.png";
+import BeBiosal from "./image/BEBiosol.png";
+import SEO from "./seo/SEO";
+import seoData from "./seo/seoData";
 import "./App.css";
 
 const PROJECTS = [
   {
-    id: "vehicle",
+    id: "bebiosal",
     num: "01",
-    label: "01 — Vehicle Rental",
+    label: "01 — BE Biosal",
+    url: "https://bebiosol.com/",
+    img: BeBiosal,
+    title: "BE Biosal",
+    desc: "Developed a responsive biotechnology company website with reusable React components, TypeScript, Tailwind CSS, REST API integration, and production deployment for an optimized cross-device user experience.",
+    stack: ["React", "TypeScript", "Tailwind CSS", "REST API", "Vite"],
+    links: {
+      frontend: "#",
+      backend: "#",
+    },
+  },
+  {
+    id: "vehicle",
+    num: "02",
+    label: "02 — Vehicle Rental",
     url: "https://online-vehicle-rental.netlify.app/",
     img: VehicleRental,
     title: "Online Vehicle Rental",
@@ -18,13 +35,13 @@ const PROJECTS = [
     stack: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS", "Razorpay"],
     links: {
       frontend: "https://github.com/NickshanJ/Vehicle-Rental.git",
-      backend:  "https://github.com/NickshanJ/Vehicle-rental-server.git",
+      backend: "https://github.com/NickshanJ/Vehicle-rental-server.git",
     },
   },
   {
     id: "movies",
-    num: "02",
-    label: "02 — Movies Search",
+    num: "03",
+    label: "03 — Movies Search",
     url: "https://moviesearch00.netlify.app/",
     img: MoviesSearch,
     title: "Movies Search App",
@@ -32,35 +49,39 @@ const PROJECTS = [
     stack: ["React", "JavaScript", "HTML", "CSS", "Tailwind CSS"],
     links: {
       frontend: "https://github.com/NickshanJ/Movie-Search.git",
-      backend:  "https://github.com/NickshanJ/Movie-Search.git",
+      backend: "https://github.com/NickshanJ/Movie-Search.git",
     },
   },
   {
     id: "portal",
-    num: "03",
-    label: "03 — Student Portal",
+    num: "04",
+    label: "04 — Student Portal",
     url: "https://student-teacher-portal.netlify.app/",
     img: Portal,
     title: "Student Teacher Portal",
     desc: "A role-based educational platform connecting students and teachers with course management, assignments, and progress tracking features.",
     stack: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
     links: {
-      frontend: "https://github.com/NickshanJ/Student-Teacher-Portal/tree/main/frontend",
-      backend:  "https://github.com/NickshanJ/Student-Teacher-Portal/tree/main/backend",
+      frontend:
+        "https://github.com/NickshanJ/Student-Teacher-Portal/tree/main/frontend",
+      backend:
+        "https://github.com/NickshanJ/Student-Teacher-Portal/tree/main/backend",
     },
   },
   {
     id: "event",
-    num: "04",
-    label: "04 — Event System",
+    num: "05",
+    label: "05 — Event System",
     url: "https://event-managementsystem.netlify.app/",
     img: Event,
     title: "Event Management System",
     desc: "A dynamic event platform to explore, reserve, and manage events — full CRUD operations with a clean, responsive design and intuitive UX.",
     stack: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
     links: {
-      frontend: "https://github.com/NickshanJ/Event-Management-System/tree/main/frontend",
-      backend:  "https://github.com/NickshanJ/Event-Management-System/tree/main/backend",
+      frontend:
+        "https://github.com/NickshanJ/Event-Management-System/tree/main/frontend",
+      backend:
+        "https://github.com/NickshanJ/Event-Management-System/tree/main/backend",
     },
   },
 ];
@@ -78,6 +99,7 @@ export default function Projects() {
 
   return (
     <div className="page-wrap scrollable">
+      <SEO {...seoData.projects} />
       <div className="page-inner">
         <div className="sec-label">My Work</div>
         <h2 className="sec-title" style={{ marginBottom: "1.4rem" }}>
@@ -110,7 +132,7 @@ export default function Projects() {
               target="_blank"
               rel="noreferrer"
               className="proj-live-badge"
-              onClick={e => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             >
               <FiExternalLink size={11} /> Live Demo
             </a>
@@ -123,7 +145,9 @@ export default function Projects() {
 
             <div className="proj-chips">
               {proj.stack.map((s, i) => (
-                <span key={i} className="proj-chip">{s}</span>
+                <span key={i} className="proj-chip">
+                  {s}
+                </span>
               ))}
             </div>
 
@@ -133,7 +157,7 @@ export default function Projects() {
                 target="_blank"
                 rel="noreferrer"
                 className="proj-code-a"
-                onClick={e => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
               >
                 <FiCode size={12} /> Frontend Code
               </a>
@@ -143,7 +167,7 @@ export default function Projects() {
                 target="_blank"
                 rel="noreferrer"
                 className="proj-code-a"
-                onClick={e => e.stopPropagation()}
+                onClick={(e) => e.stopPropagation()}
               >
                 <FiCode size={12} /> Backend Code
               </a>

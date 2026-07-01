@@ -6,6 +6,8 @@ import {
 import {
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiPostman, SiNetlify, SiRender
 } from "react-icons/si";
+import SEO from "./seo/SEO";
+import seoData from "./seo/seoData";
 import "./App.css";
 
 const SKILLS = [
@@ -31,6 +33,7 @@ export default function Skills() {
 
   return (
     <div className="page-wrap">
+      <SEO {...seoData.skills} />
       <div className="page-inner">
         <div className="sec-label">Tech Stack</div>
         <h2 className="sec-title">
