@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import DynamicText from "./DynamicText";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
 import { FiDownload, FiArrowRight } from "react-icons/fi";
+import SEO from "./seo/SEO";
+import seoData from "./seo/seoData";
 import "./App.css";
 
 export default function Home() {
@@ -12,6 +14,7 @@ export default function Home() {
 
   return (
     <div className="page-wrap">
+      <SEO {...seoData.home} />
       <div className="page-inner">
         <div className="home-grid">
 

@@ -3,6 +3,8 @@ import { FaLinkedin, FaGithub, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { FiDownload, FiMail } from "react-icons/fi";
 import profileImage from "./image/About Page.webp";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
+import SEO from "./seo/SEO";
+import seoData from "./seo/seoData";
 import "./App.css";
 
 const SOCIALS = [
@@ -26,6 +28,7 @@ export default function About() {
 
   return (
     <div className="page-wrap">
+      <SEO {...seoData.about} />
       <div className="page-inner">
         <div className="sec-label">About Me</div>
         <h2 className="sec-title">
