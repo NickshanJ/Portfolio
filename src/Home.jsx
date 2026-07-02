@@ -72,7 +72,7 @@ export default function Home() {
             {/* Stats */}
             <div className="home-stats">
               <div>
-                <div className="stat-n">4+</div>
+                <div className="stat-n">5+</div>
                 <div className="stat-l">Projects Built</div>
               </div>
               <div>
