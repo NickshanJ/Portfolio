@@ -4,7 +4,7 @@ import {
   FaGithub,
 } from "react-icons/fa";
 import {
-  SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiPostman, SiNetlify, SiRender
+  SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiPostman, SiNetlify, SiRender, SiTypescript
 } from "react-icons/si";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
@@ -15,6 +15,7 @@ const SKILLS = [
   { name: "CSS3",        Icon: FaCss3Alt,     color: "#1572B6" },
   { name: "Tailwind CSS",Icon: SiTailwindcss, color: "#38B2AC" },
   { name: "JavaScript",  Icon: FaJs,          color: "#F7DF1E" },
+  { name: "TypeScript",  Icon: SiTypescript,  color: "#3178C6" },
   { name: "React.js",    Icon: FaReact,       color: "#61DAFB" },
   { name: "Node.js",     Icon: FaNodeJs,      color: "#68A063" },
   { name: "Express.js",  Icon: SiExpress,     color: "#00D4FF" },
