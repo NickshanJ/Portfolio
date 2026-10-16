@@ -1,12 +1,7 @@
 import { Helmet } from "react-helmet-async";
+import PropTypes from "prop-types";
 
-export default function SEO({
-  title,
-  description,
-  keywords,
-  url,
-  image,
-}) {
+export default function SEO({ title, description, keywords, url, image }) {
   return (
     <Helmet>
       {/* Basic SEO */}
@@ -35,3 +30,10 @@ export default function SEO({
     </Helmet>
   );
 }
+SEO.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  keywords: PropTypes.string.isRequired,
+  url: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+};

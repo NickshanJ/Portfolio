@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FiExternalLink, FiCode } from "react-icons/fi";
 import MoviesSearch from "./image/Movies Search.png";
 import VehicleRental from "./image/Vehicle Rental.png";
@@ -7,7 +7,6 @@ import Event from "./image/Event.png";
 import BeBiosal from "./image/BEBiosol.png";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
-import "./App.css";
 
 const PROJECTS = [
   {

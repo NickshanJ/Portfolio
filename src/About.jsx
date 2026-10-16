@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { FiDownload, FiMail } from "react-icons/fi";
 import profileImage from "./image/About Page.webp";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
-import "./App.css";
 
 const SOCIALS = [
   { Icon: FaLinkedin, href: "https://www.linkedin.com/in/nickshanj/", label: "LinkedIn"  },
@@ -64,7 +63,7 @@ export default function About() {
           {/* ── Content column ── */}
           <div className="anim-right">
             <p className="about-bio">
-              I'm a passionate <strong>Full Stack Developer</strong> who thrives on
+              I&apos;m a passionate <strong>Full Stack Developer</strong> who thrives on
               turning ideas into polished, real-world digital products. I specialise
               in the <strong>MERN stack</strong> and have a strong eye for clean,
               accessible UI design that users actually enjoy.
@@ -79,7 +78,7 @@ export default function About() {
             </p>
             <p className="about-bio">
               With hands-on experience in <strong>React.js, Node.js, Express,
-              MongoDB, MySQL</strong>, and tools like Postman and Git, I'm always
+              MongoDB, MySQL</strong>, and tools like Postman and Git, I&apos;m always
               looking to grow, collaborate, and contribute meaningful work. I stay
               current with industry trends and love exploring new technologies that
               make development faster and more enjoyable.

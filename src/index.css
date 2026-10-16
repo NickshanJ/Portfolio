@@ -1,1 +1,11 @@
+
 @import "tailwindcss";
+
+@theme {
+  --font-grotesk: "Space Grotesk", sans-serif;
+  --font-mono: "Space Mono", monospace;
+  --font-trade-winds: "Trade Winds", cursive;
+  --font-stylish: "Stylish", sans-serif;
+
+  --color-cyan: #00D4FF;
+}

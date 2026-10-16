@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs,
   FaGithub,
@@ -8,7 +8,6 @@ import {
 } from "react-icons/si";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
-import "./App.css";
 
 const SKILLS = [
   { name: "HTML5",       Icon: FaHtml5,      color: "#E44D26" },

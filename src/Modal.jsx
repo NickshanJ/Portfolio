@@ -1,5 +1,4 @@
-import React from "react";
-import "./App.css";
+import PropTypes from "prop-types";
 
 export default function Modal({ visible, message, onClose }) {
   if (!visible) return null;
@@ -14,15 +13,28 @@ export default function Modal({ visible, message, onClose }) {
             style={{ width: 60, height: 60 }}
           >
             <circle className="checkmark-circle" cx="32" cy="32" r="30" />
-            <path className="checkmark-check" fill="none" d="M20 33l8 8 16-16" />
+            <path
+              className="checkmark-check"
+              fill="none"
+              d="M20 33l8 8 16-16"
+            />
           </svg>
         </div>
         <p className="modal-tag">Sent Successfully</p>
         <p className="modal-msg">{message}</p>
-        <button className="btn-cyan" onClick={onClose} style={{ margin: "0 auto" }}>
+        <button
+          className="btn-cyan"
+          onClick={onClose}
+          style={{ margin: "0 auto" }}
+        >
           Done
         </button>
       </div>
     </div>
   );
 }
+Modal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
+};

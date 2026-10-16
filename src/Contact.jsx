@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
 import Modal from "./Modal";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
-import "./App.css";
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
@@ -44,7 +43,7 @@ export default function Contact() {
       const data = await response.json();
 
       if (data.success) {
-        setModalMsg("Your message was sent! I'll get back to you soon.");
+        setModalMsg("Your message was sent! I\u0027ll get back to you soon.");
         setModalVis(true);
         e.target.reset();
       } else {
@@ -69,7 +68,7 @@ export default function Contact() {
 
           <div className="sec-label">Get In Touch</div>
           <h2 className="sec-title" style={{ marginBottom: "1.4rem" }}>
-            Let's <span className="cyan">Work Together</span>
+            Let&apos;s <span className="cyan">Work Together</span>
           </h2>
 
           <div className="contact-layout">
@@ -77,9 +76,9 @@ export default function Contact() {
             {/* ── Left — contact info ── */}
             <div className="anim-left">
               <p className="contact-intro">
-                I'm always open to discussing <strong>new projects</strong>,
+                I&apos;m always open to discussing <strong>new projects</strong>,
                 creative ideas, or opportunities to build something great.
-                Drop me a message — I'd love to connect.
+                Drop me a message — I&apos;d love to connect.
               </p>
 
               {CONTACTS.map(({ Icon, label, value, href }) => (

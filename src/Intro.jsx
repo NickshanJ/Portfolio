@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 export default function Intro({ onDone }) {
   const [fadeOut, setFadeOut] = useState(false);
@@ -121,3 +122,6 @@ export default function Intro({ onDone }) {
     </>
   );
 }
+Intro.propTypes = {
+  onDone: PropTypes.func.isRequired,
+};

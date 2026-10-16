@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import DynamicText from "./DynamicText";
 import resumePDF from "./assets/Resume - Nickshan J.pdf";
 import { FiDownload, FiArrowRight } from "react-icons/fi";
 import SEO from "./seo/SEO";
 import seoData from "./seo/seoData";
-import "./App.css";
 
 export default function Home() {
   useEffect(() => {
@@ -26,7 +25,7 @@ export default function Home() {
               <span className="home-status-txt">Open to Opportunities</span>
             </div>
 
-            <p className="home-greeting">Hello, I'm</p>
+            <p className="home-greeting">Hello, I&apos;m</p>
 
             <h1 className="home-name">
               J. Nickshan
@@ -39,7 +38,7 @@ export default function Home() {
                 texts={[
                   "Front-End Developer",
                   "MERN Full Stack Developer",
-                  "React Specialist",
+                  "React Developer",
                 ]}
               />
               <span className="cursor-blink"> |</span>
@@ -116,21 +115,21 @@ export default function Home() {
                 </div>
                 <div className="to" style={{ color: "#5a5f72" }}>{`{`}</div>
                 <div className="to">
-                  <span style={{ color: "#00D4FF" }}>"frontend"</span>
+                  <span style={{ color: "#00D4FF" }}>&quot;frontend&quot;</span>
                   <span style={{ color: "#5a5f72" }}>: </span>
-                  <span style={{ color: "#4ade80" }}>"React, Tailwind, JS"</span>
+                  <span style={{ color: "#4ade80" }}>&quot;React, Tailwind, JS&quot;</span>
                   <span style={{ color: "#5a5f72" }}>,</span>
                 </div>
                 <div className="to">
-                  <span style={{ color: "#00D4FF" }}>"backend"</span>
+                  <span style={{ color: "#00D4FF" }}>&quot;backend&quot;</span>
                   <span style={{ color: "#5a5f72" }}>:  </span>
-                  <span style={{ color: "#4ade80" }}>"Node, Express, MongoDB"</span>
+                  <span style={{ color: "#4ade80" }}>&quot;Node, Express, MongoDB&quot;</span>
                   <span style={{ color: "#5a5f72" }}>,</span>
                 </div>
                 <div className="to">
-                  <span style={{ color: "#00D4FF" }}>"tools"</span>
+                  <span style={{ color: "#00D4FF" }}>&quot;tools&quot;</span>
                   <span style={{ color: "#5a5f72" }}>:   </span>
-                  <span style={{ color: "#4ade80" }}>"Git, Postman, VSCode"</span>
+                  <span style={{ color: "#4ade80" }}>&quot;Git, Postman, VSCode&quot;</span>
                 </div>
                 <div className="to" style={{ color: "#5a5f72" }}>{`}`}</div>
 
