@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
 function DynamicText({ texts, typingSpeed = 65, pauseDuration = 1800 }) {
-  const [display, setDisplay]   = useState("");
-  const [idx, setIdx]           = useState(0);
+  const [display, setDisplay] = useState("");
+  const [idx, setIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
@@ -27,5 +28,11 @@ function DynamicText({ texts, typingSpeed = 65, pauseDuration = 1800 }) {
 
   return <span className="typed">{display}</span>;
 }
+
+DynamicText.propTypes = {
+  texts: PropTypes.arrayOf(PropTypes.string).isRequired,
+  typingSpeed: PropTypes.number,
+  pauseDuration: PropTypes.number,
+};
 
 export default DynamicText;
