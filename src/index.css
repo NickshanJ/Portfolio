@@ -9,3 +9,33 @@
 
   --color-cyan: #00D4FF;
 }
+
+/* ─── BROWSER AUTOFILL OVERRIDE ─────────────────────────────────────
+   Browsers (Chrome/Edge) override background-color on autofilled inputs
+   using a high-specificity UA stylesheet. The only reliable cross-browser
+   fix is the -webkit-box-shadow "inner shadow" trick which paints over the
+   autofill background, and -webkit-text-fill-color which overrides text color.
+   This rule is scoped to the admin form inputs only via their IDs.
+───────────────────────────────────────────────────────────────────── */
+@layer base {
+  #admin-username:-webkit-autofill,
+  #admin-username:-webkit-autofill:hover,
+  #admin-username:-webkit-autofill:focus,
+  #admin-username:-webkit-autofill:active,
+  #admin-password:-webkit-autofill,
+  #admin-password:-webkit-autofill:hover,
+  #admin-password:-webkit-autofill:focus,
+  #admin-password:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #060a0e inset !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Firefox autofill */
+  #admin-username:autofill,
+  #admin-password:autofill {
+    background-color: #060a0e !important;
+    color: #ffffff !important;
+  }
+}

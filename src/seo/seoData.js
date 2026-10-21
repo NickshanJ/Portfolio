@@ -6,7 +6,7 @@ const seoData = {
     keywords:
       "Nickshan J, MERN Developer, React Developer, Frontend Developer, Full Stack Developer, Portfolio",
     url: "https://nickshanjportfolio.netlify.app/",
-    image: "https://nickshanjportfolio.netlify.app/seo.png"
+    image: "https://nickshanjportfolio.netlify.app/seo.png",
   },
 
   about: {
@@ -16,6 +16,7 @@ const seoData = {
     keywords:
       "About Nickshan J, React Developer, MERN Stack Developer, Web Developer",
     url: "https://nickshanjportfolio.netlify.app/about",
+    image: "https://nickshanjportfolio.netlify.app/seo.png",
   },
 
   skills: {
@@ -25,6 +26,7 @@ const seoData = {
     keywords:
       "React, JavaScript, TypeScript, Tailwind CSS, Node.js, MongoDB, Express",
     url: "https://nickshanjportfolio.netlify.app/skills",
+    image: "https://nickshanjportfolio.netlify.app/seo.png",
   },
 
   projects: {
@@ -34,6 +36,7 @@ const seoData = {
     keywords:
       "BE Biosal, React Projects, MERN Projects, Portfolio Projects",
     url: "https://nickshanjportfolio.netlify.app/projects",
+    image: "https://nickshanjportfolio.netlify.app/seo.png",
   },
 
   contact: {
@@ -43,6 +46,7 @@ const seoData = {
     keywords:
       "Contact Nickshan J, Freelance React Developer, MERN Developer",
     url: "https://nickshanjportfolio.netlify.app/contact",
+    image: "https://nickshanjportfolio.netlify.app/seo.png",
   },
 };
 

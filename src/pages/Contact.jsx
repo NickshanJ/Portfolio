@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope, FaWhatsapp } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
-import Modal from "./Modal";
-import SEO from "./seo/SEO";
-import seoData from "./seo/seoData";
+import Modal from "../components/Modal";
+import SEO from "../seo/SEO";
+import seoData from "../seo/seoData";
 
 const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
@@ -63,8 +63,8 @@ export default function Contact() {
   return (
     <>
       <SEO {...seoData.contact} />
-      <div className="page-wrap" style={{ alignItems: "stretch", flexDirection: "column", justifyContent: "center" }}>
-        <div className="page-inner" style={{ paddingTop: "1rem", paddingBottom: "0.5rem" }}>
+      <div className="page-wrap contact-page-wrap">
+        <div className="page-inner" style={{ paddingTop: 0, paddingBottom: "0.5rem" }}>
 
           <div className="sec-label">Get In Touch</div>
           <h2 className="sec-title" style={{ marginBottom: "1.4rem" }}>
@@ -169,9 +169,6 @@ export default function Contact() {
         <div className="footer-bar">
           <p className="footer-copy">
             © 2025 J. Nickshan · Built with React &amp; Tailwind CSS ·{" "}
-            <a href="https://storyset.com/" target="_blank" rel="nofollow noopener noreferrer">
-              Storyset
-            </a>
           </p>
           <div className="footer-soc">
             {CONTACTS.slice(0, 3).map(({ Icon, label, href }) => (
