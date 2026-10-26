@@ -146,7 +146,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
           <h3 className="text-lg font-bold text-white sm:text-xl">
             {project ? "Edit Project" : "Add Project"}
           </h3>
-          <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-400">
             {project
               ? "Update project details, links, or image."
               : "Add a new featured or regular project to your portfolio."}
@@ -177,7 +177,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             onChange={updateField}
             required
             maxLength={120}
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
             placeholder="e.g. BE Biosal"
           />
         </label>
@@ -189,7 +189,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             value={form.category}
             onChange={updateField}
             maxLength={60}
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
             placeholder="e.g. Full Stack Web Development"
           />
         </label>
@@ -203,7 +203,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             required
             maxLength={3000}
             rows={4}
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
             placeholder="Describe what the project accomplishes, features built, and problems solved..."
           />
         </label>
@@ -215,7 +215,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             value={form.technologies}
             onChange={updateField}
             placeholder="React, TypeScript, Tailwind CSS, Vite"
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
           />
         </label>
 
@@ -231,7 +231,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
               setError("");
             }}
             required={!form.image}
-            className="block w-full min-w-0 rounded-xl border border-white/10 bg-[#060a0e] p-2.5 file:mr-3 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-cyan hover:file:bg-cyan/20 sm:p-3 sm:text-sm"
+            className="block w-full min-w-0 rounded-xl border border-white/10 bg-[#05090d] p-2.5 file:mr-3 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-cyan hover:file:bg-cyan/20 sm:p-3 sm:text-sm"
           />
           <span className="block text-[11px] text-slate-500 sm:text-xs">
             PNG, JPG, or WebP format. Maximum size: 5 MB.
@@ -243,7 +243,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             <span className="text-xs font-medium text-slate-400">
               Current Preview
             </span>
-            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#060a0e]">
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-[#05090d]">
               <img
                 src={form.image}
                 alt="Project preview"
@@ -261,7 +261,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             value={form.liveUrl}
             onChange={updateField}
             placeholder="https://example.com"
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
           />
         </label>
 
@@ -275,7 +275,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             min="0"
             step="1"
             required
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
           />
         </label>
 
@@ -287,7 +287,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             value={form.frontendUrl}
             onChange={updateField}
             placeholder="https://github.com/..."
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
           />
         </label>
 
@@ -299,12 +299,12 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
             value={form.backendUrl}
             onChange={updateField}
             placeholder="https://github.com/..."
-            className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-2.5 text-sm text-white  transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
+            className="w-full rounded-xl border border-white/10 bg-[#05090d] px-3.5 py-2.5 text-sm text-white  transition focus:outline-none focus:ring-1 focus:ring-cyan sm:py-3"
           />
         </label>
       </div>
 
-      <div className="flex flex-wrap gap-4 rounded-xl border border-white/10 bg-[#060a0e] p-3.5 sm:gap-6 sm:p-4">
+      <div className="flex flex-wrap gap-4 rounded-xl border border-white/10 bg-[#05090d] p-3.5 sm:gap-6 sm:p-4">
         <label className="flex cursor-pointer items-center gap-2.5 text-xs font-medium text-slate-300 sm:text-sm">
           <input
             type="checkbox"
@@ -495,10 +495,10 @@ function ProjectManagement({ token }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan sm:text-xs">
             Management
           </p>
-          <h2 className="mt-1 text-xl font-bold text-white sm:text-3xl">
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Project Management
           </h2>
-          <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-400">
             Manage the projects displayed on your portfolio showcase.
           </p>
         </div>
@@ -535,7 +535,7 @@ function ProjectManagement({ token }) {
       )}
 
       {showForm ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] p-4 sm:p-6 lg:p-7">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 sm:p-6 lg:p-7">
           <ProjectForm
             key={editingProject?._id || "new-project"}
             token={token}
@@ -566,11 +566,11 @@ function ProjectManagement({ token }) {
           />
         </div>
       ) : loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] p-8 text-center text-xs text-slate-400 sm:text-sm">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-8 text-center text-xs text-slate-400 sm:text-sm">
           Loading projects...
         </div>
       ) : projects.length === 0 && !error ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] px-5 py-12 text-center">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] px-5 py-12 text-center">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-cyan/20 bg-cyan/[0.07] text-cyan">
             <DashboardIcon type="projects" />
           </div>
@@ -591,7 +591,7 @@ function ProjectManagement({ token }) {
           {projects.map((project) => (
             <article
               key={project._id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#080d12] transition hover:border-cyan/30"
+              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] transition hover:border-cyan/30"
             >
               <div className="relative aspect-video w-full overflow-hidden bg-[#060a0e]">
                 {project.image ? (

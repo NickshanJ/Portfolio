@@ -17,7 +17,7 @@ const DEFAULT_HOME = {
 };
 
 const inputClass =
-  "mt-2 w-full rounded-xl border border-white/10 bg-[#030609] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-cyan/50 focus:ring-2 focus:ring-cyan/10";
+  "mt-2 w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-cyan/50 focus:ring-2 focus:ring-cyan/10";
 
 const labelClass = "text-sm font-semibold text-slate-200";
 
@@ -31,7 +31,6 @@ export default function HomeManagement({ token }) {
   const loadHomeSettings = useCallback(async () => {
     setLoading(true);
     setError("");
-    
 
     try {
       const response = await fetch(`${API_URL}/api/settings/home`);
@@ -70,8 +69,6 @@ export default function HomeManagement({ token }) {
       ...current,
       [name]: name === "experienceYears" ? value : value,
     }));
-
-    
   }
 
   function updateRole(index, value) {
@@ -81,8 +78,6 @@ export default function HomeManagement({ token }) {
         roleIndex === index ? value : role,
       ),
     }));
-
-    
   }
 
   function addRole() {
@@ -90,8 +85,6 @@ export default function HomeManagement({ token }) {
       ...current,
       roleTitles: [...current.roleTitles, ""],
     }));
-
-    
   }
 
   function removeRole(index) {
@@ -102,7 +95,6 @@ export default function HomeManagement({ token }) {
       ),
     }));
 
-    
     setError("");
   }
 
@@ -111,7 +103,6 @@ export default function HomeManagement({ token }) {
 
     setSaving(true);
     setError("");
-    
 
     const roleTitles = form.roleTitles.map((role) => role.trim());
 
@@ -210,13 +201,13 @@ export default function HomeManagement({ token }) {
       )}
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] p-6 text-sm text-slate-400">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-6 text-sm text-slate-400">
           Loading Home settings...
         </div>
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12] p-4 sm:p-6"
+          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 sm:p-6"
         >
           {/* Animated role titles */}
           <div>
@@ -250,7 +241,7 @@ export default function HomeManagement({ token }) {
                     onChange={(event) => updateRole(index, event.target.value)}
                     placeholder="e.g. Front-End Developer"
                     aria-label={`Role title ${index + 1}`}
-                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[#030609] px-3 py-3 text-sm text-white outline-none transition focus:ring-2 focus:ring-cyan/10"
+                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-[#05090d] px-3 py-3 text-sm text-white outline-none transition focus:ring-2 focus:ring-cyan/10"
                     required
                   />
 

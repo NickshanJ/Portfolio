@@ -229,9 +229,9 @@ export default function AboutManagement({ token }) {
   }
 
   const inputClass =
-    "mt-1 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400";
+    "mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white outline-none focus:border-cyan-400";
   const buttonClass =
-    "rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40";
+    "rounded-xl border border-white/10 px-3 py-2 text-sm text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40";
 
   if (loading) {
     return (
@@ -290,7 +290,7 @@ export default function AboutManagement({ token }) {
         {about.paragraphs.map((item, index) => (
           <div
             key={item._id || `paragraph-${index}`}
-            className="space-y-2 rounded-lg border border-white/10 p-3"
+            className="space-y-2 rounded-xl border border-white/10 p-3"
           >
             <div className="flex items-center justify-between gap-2">
               <label className="text-sm text-slate-300">
@@ -367,7 +367,7 @@ export default function AboutManagement({ token }) {
         {about.infoItems.map((item, index) => (
           <div
             key={item._id || `info-${index}`}
-            className="grid gap-3 rounded-lg border border-white/10 p-3 sm:grid-cols-2"
+            className="grid gap-3 rounded-xl border border-white/10 p-3 sm:grid-cols-2"
           >
             <label className="text-sm text-slate-300">
               Label

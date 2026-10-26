@@ -129,15 +129,15 @@ function ResumeManagement({ token }) {
         <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan sm:text-xs">
           Management
         </p>
-        <h2 className="mt-1 text-xl font-bold text-white sm:text-3xl">
+        <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
           Resume Management
         </h2>
-        <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+        <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-400">
           Upload or replace the resume displayed to visitors on your portfolio.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-[#080d12] p-4.5 sm:p-7">
+      <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4.5 sm:p-7">
         {loading ? (
           <p className="text-xs text-slate-400 sm:text-sm">
             Loading resume details...
@@ -204,7 +204,7 @@ function ResumeManagement({ token }) {
                     setSelectedFile(event.target.files?.[0] || null);
                     setError("");
                   }}
-                  className="block w-full min-w-0 rounded-xl border border-white/10 bg-[#060a0e] p-2.5 text-xs text-slate-300 file:mr-3 file:px-3 file:py-1.5 file:font-semibold hover:file:bg-cyan/20 sm:p-3 sm:text-sm"
+                  className="block w-full min-w-0 rounded-xl border border-white/10 bg-[#05090d] transition-colors p-2.5 text-xs text-slate-300 file:mr-3 file:px-3 file:py-1.5 file:font-semibold hover:file:bg-cyan/20 sm:p-3 sm:text-sm"
                 />
                 <p className="mt-1.5 text-[11px] text-slate-500 sm:text-xs">
                   PDF format only. Maximum file size: 10 MB.
