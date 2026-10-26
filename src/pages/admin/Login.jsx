@@ -1,79 +1,11 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-
-function ShieldIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-9 w-9"
-      aria-hidden="true"
-    >
-      <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z" />
-      <rect x="9" y="10" width="6" height="5" rx="1" />
-      <path d="M10 10V8a2 2 0 0 1 4 0v2" />
-    </svg>
-  );
-}
-
-function UserIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M5 21v-2a7 7 0 0 1 14 0v2Z" />
-    </svg>
-  );
-}
-
-function LockIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5"
-      aria-hidden="true"
-    >
-      <rect x="4" y="10" width="16" height="11" rx="2" />
-      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-      <path d="M12 14v3" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-      aria-hidden="true"
-    >
-      <path d="M5 12h14" />
-      <path d="m13 6 6 6-6 6" />
-    </svg>
-  );
-}
+import NJLogo from "../../assets/NJ.png";
+import {
+  FiUser,
+  FiLock,
+  FiArrowRight,
+} from "react-icons/fi";
 
 export default function Login({ onLogin, loading, error }) {
   const [username, setUsername] = useState("");
@@ -86,41 +18,58 @@ export default function Login({ onLogin, loading, error }) {
 
   return (
     <main
-      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#030609] px-4 py-10 font-grotesk text-white sm:px-6"
+      className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-[#030609] px-4 py-7 font-grotesk text-white sm:px-6 sm:py-8"
       style={{
         backgroundImage:
           "radial-gradient(circle at 50% 48%, rgba(0,212,255,0.10), transparent 38%), radial-gradient(rgba(0,212,255,0.10) 0.7px, transparent 0.7px)",
         backgroundSize: "100% 100%, 28px 28px",
       }}
     >
+      {/* Background glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute left-1/2 top-1/2 h-110 w-110 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan/10 blur-[100px] sm:h-155 sm:w-155"
       />
 
-      <div className="relative z-10 my-auto w-full max-w-142">
-        <section className="relative w-full rounded-[22px] border border-cyan/30 bg-[#080d12]/95 px-5 pb-6 pt-8 shadow-[0_0_60px_rgba(0,212,255,0.07)] sm:px-8 sm:pb-7 sm:pt-8">
-          <div className="mx-auto mb-5 flex h-18 w-18 shrink-0 items-center justify-center rounded-[18px] border border-cyan/40 bg-cyan/[0.07] text-cyan shadow-[0_0_30px_rgba(0,212,255,0.08)] sm:h-19 sm:w-19">
-            <ShieldIcon />
-          </div>
+      {/* Login content */}
+      <div className="relative z-10 my-auto w-full max-w-112.5">
+        <section className="relative w-full rounded-[20px] border border-cyan/30 bg-[#080d12]/95 px-5 pb-5 pt-6 shadow-[0_0_50px_rgba(0,212,255,0.07)] sm:px-7 sm:pb-6 sm:pt-7">
+          {/* NJ logo */}
+          <a
+            href="/"
+            aria-label="Go to portfolio homepage"
+            title="Back to portfolio homepage"
+            className="mx-auto mb-4 flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-cyan/30 bg-cyan/5 p-2 transition hover:border-cyan/60 sm:mb-5 sm:h-16 sm:w-16"
+          >
+            <img
+              src={NJLogo}
+              alt="NJ Logo"
+              className="h-full w-full object-contain"
+            />
+          </a>
 
-          <header className="mb-7 text-center">
+          {/* Heading */}
+          <header className="mb-5 text-center sm:mb-6">
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.3em] text-cyan sm:text-xs sm:tracking-[0.35em]">
               Portfolio Management
             </p>
-            <h1 className="text-[27px] font-bold leading-tight tracking-tight text-white sm:text-[36px]">
+
+            <h1 className="text-[25px] font-bold leading-tight tracking-tight text-white sm:text-[32px]">
               Welcome back, <span className="text-cyan">Admin</span>
             </h1>
-            <p className="mx-auto mt-3 max-w-92.5 text-sm leading-6 text-slate-400 sm:text-[15px]">
+
+            <p className="mx-auto mt-2 max-w-92.5 text-sm leading-6 text-slate-400 sm:mt-3 sm:text-[15px]">
               Sign in to manage your portfolio projects and resume.
             </p>
           </header>
 
+          {/* Login form */}
           <form
             onSubmit={handleSubmit}
-            className="flex w-full flex-col gap-4"
+            className="flex w-full flex-col gap-3.5 sm:gap-4"
             style={{ colorScheme: "dark" }}
           >
+            {/* Username */}
             <div className="w-full">
               <label
                 htmlFor="admin-username"
@@ -128,10 +77,12 @@ export default function Login({ onLogin, loading, error }) {
               >
                 Username
               </label>
+
               <div className="relative w-full">
                 <span className="pointer-events-none absolute inset-y-0 left-4 z-10 flex items-center text-slate-400">
-                  <UserIcon />
+                  <FiUser className="h-5 w-5" aria-hidden="true" />
                 </span>
+
                 <input
                   id="admin-username"
                   name="username"
@@ -149,6 +100,7 @@ export default function Login({ onLogin, loading, error }) {
               </div>
             </div>
 
+            {/* Password */}
             <div className="w-full">
               <label
                 htmlFor="admin-password"
@@ -156,10 +108,12 @@ export default function Login({ onLogin, loading, error }) {
               >
                 Password
               </label>
+
               <div className="relative w-full">
                 <span className="pointer-events-none absolute inset-y-0 left-4 z-10 flex items-center text-slate-400">
-                  <LockIcon />
+                  <FiLock className="h-5 w-5" aria-hidden="true" />
                 </span>
+
                 <input
                   id="admin-password"
                   name="password"
@@ -175,6 +129,7 @@ export default function Login({ onLogin, loading, error }) {
               </div>
             </div>
 
+            {/* Error message */}
             {error && (
               <p
                 role="alert"
@@ -184,28 +139,41 @@ export default function Login({ onLogin, loading, error }) {
               </p>
             )}
 
+            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
               className="group flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-cyan bg-cyan px-5 py-0 text-sm font-bold leading-normal text-slate-950 shadow-[0_5px_25px_rgba(0,212,255,0.15)] transition duration-300 hover:bg-[#38e2f7] hover:shadow-[0_5px_35px_rgba(0,212,255,0.22)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <span>{loading ? "Signing in..." : "Sign in to dashboard"}</span>
-              {!loading && <ArrowIcon />}
+              <span>
+                {loading ? "Signing in..." : "Sign in to dashboard"}
+              </span>
+
+              {!loading && (
+                <FiArrowRight
+                  className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              )}
             </button>
           </form>
 
-          <div className="mt-5 flex items-center justify-center gap-3">
+          {/* Security divider */}
+          <div className="mt-4 flex items-center justify-center gap-3">
             <span className="h-px flex-1 bg-white/8" />
+
             <span className="shrink-0 text-[10px] uppercase tracking-[0.2em] text-slate-600">
               Secure access
             </span>
+
             <span className="h-px flex-1 bg-white/8" />
           </div>
         </section>
 
+        {/* Back to portfolio */}
         <a
           href="/"
-          className="mt-5 flex items-center justify-center gap-2 text-sm text-slate-400 no-underline transition-colors hover:text-cyan"
+          className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400 no-underline transition-colors hover:text-cyan"
         >
           <span aria-hidden="true" className="text-lg">
             ←

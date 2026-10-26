@@ -21,7 +21,6 @@ export default function SkillManagement({ token }) {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState("");
   const [error, setError] = useState("");
-  const [notice, setNotice] = useState("");
   const [pendingDelete, setPendingDelete] = useState(null);
   const [modal, setModal] = useState(null);
 
@@ -66,7 +65,6 @@ export default function SkillManagement({ token }) {
       order: nextOrder,
     });
     setError("");
-    setNotice("");
     setShowForm(true);
   }
 
@@ -80,7 +78,6 @@ export default function SkillManagement({ token }) {
       published: skill.published ?? true,
     });
     setError("");
-    setNotice("");
     setShowForm(true);
   }
 
@@ -97,7 +94,6 @@ export default function SkillManagement({ token }) {
     event.preventDefault();
     setSaving(true);
     setError("");
-    setNotice("");
 
     try {
       const payload = {
@@ -128,14 +124,24 @@ export default function SkillManagement({ token }) {
         throw new Error(data.message || "Unable to save skill.");
       }
 
+      const wasEditing = Boolean(editingId);
+      const skillName = payload.name;
+
       setShowForm(false);
       setEditingId(null);
       setForm({ ...emptyForm });
-      setNotice(
-        editingId ? "Skill updated successfully." : "Skill added successfully.",
-      );
 
       await loadSkills();
+
+      setModal({
+        title: wasEditing ? "Skill Updated!" : "Skill Added!",
+        message: wasEditing
+          ? `"${skillName}" was updated successfully.`
+          : `"${skillName}" was added successfully.`,
+        variant: "success",
+        confirmText: "OK",
+        cancelText: "Close",
+      });
     } catch (err) {
       setError(err.message || "Unable to save skill.");
     } finally {
@@ -149,7 +155,6 @@ export default function SkillManagement({ token }) {
     const skill = pendingDelete;
     setDeletingId(skill._id);
     setError("");
-    setNotice("");
 
     try {
       const response = await fetch(`${API_URL}/api/admin/skills/${skill._id}`, {
@@ -167,9 +172,15 @@ export default function SkillManagement({ token }) {
 
       setSkills((current) => current.filter((item) => item._id !== skill._id));
 
-      setModal(null);
       setPendingDelete(null);
-      setNotice(`"${skill.name}" was deleted successfully.`);
+
+      setModal({
+        title: "Skill Deleted!",
+        message: `"${skill.name}" was deleted successfully.`,
+        variant: "success",
+        confirmText: "OK",
+        cancelText: "Close",
+      });
     } catch (err) {
       setError(err.message || "Unable to delete skill.");
       setModal(null);
@@ -192,10 +203,10 @@ export default function SkillManagement({ token }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan sm:text-xs">
             Management
           </p>
-          <h2 className="mt-1 text-xl font-bold text-white sm:text-3xl">
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Skill Management
           </h2>
-          <p className="mt-1 text-xs text-slate-400 sm:text-sm">
+          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-400">
             Add, edit, and control the skills displayed on your portfolio.
           </p>
         </div>
@@ -228,19 +239,10 @@ export default function SkillManagement({ token }) {
         </div>
       )}
 
-      {notice && (
-        <p
-          role="status"
-          className="rounded-xl border border-emerald-400/25 bg-emerald-400/[0.07] px-4 py-3 text-sm text-emerald-300"
-        >
-          {notice}
-        </p>
-      )}
-
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12] p-4 sm:p-6 lg:p-7"
+          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 sm:p-6 lg:p-7"
         >
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-white">
@@ -270,7 +272,7 @@ export default function SkillManagement({ token }) {
                 required
                 maxLength={80}
                 placeholder="e.g. React"
-                className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
+                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
               />
             </label>
 
@@ -282,17 +284,18 @@ export default function SkillManagement({ token }) {
                 onChange={updateField}
                 required
                 maxLength={100}
-                placeholder="e.g. FaReact"
-                className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
+                placeholder="e.g. simple-icons:mysql"
+                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
               />
               <span className="block text-xs text-slate-500">
-                Enter the React Icons component name, not an image URL.
+                Enter an Iconify identifier, for example simple-icons:mysql.
+                Find icons at icon-sets.iconify.design.
               </span>
             </label>
 
             <label className="space-y-1.5 text-sm text-slate-300">
               <span>Brand color</span>
-              <div className="flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-[#060a0e] px-3">
+              <div className="flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3">
                 <input
                   type="color"
                   name="color"
@@ -314,7 +317,7 @@ export default function SkillManagement({ token }) {
                 min="0"
                 step="1"
                 required
-                className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
+                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
               />
             </label>
           </div>
@@ -341,11 +344,11 @@ export default function SkillManagement({ token }) {
       )}
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] p-8 text-center text-sm text-slate-400">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-8 text-center text-sm text-slate-400">
           Loading skills...
         </div>
       ) : skills.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12] px-5 py-12 text-center">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] px-5 py-12 text-center">
           <h3 className="font-semibold text-white">No skills yet</h3>
           <p className="mt-2 text-sm text-slate-400">
             Add your first skill to start managing your portfolio skills.
@@ -365,7 +368,7 @@ export default function SkillManagement({ token }) {
           {skills.map((skill) => (
             <article
               key={skill._id}
-              className="rounded-2xl border border-white/10 bg-[#080d12] p-4 transition hover:border-cyan/30 sm:p-5"
+              className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 transition hover:border-cyan/30 sm:p-5"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
@@ -439,7 +442,14 @@ export default function SkillManagement({ token }) {
         cancelText={modal?.cancelText || "Cancel"}
         isLoading={Boolean(deletingId)}
         loadingText="Deleting..."
-        onConfirm={confirmDelete}
+        onConfirm={() => {
+          if (modal?.variant === "success") {
+            setModal(null);
+            return;
+          }
+
+          confirmDelete();
+        }}
         onCancel={closeModal}
       />
     </section>
