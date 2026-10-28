@@ -6,6 +6,12 @@ import seoData from "../seo/seoData";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
+const getShortProjectTitle = (title = "") => {
+  const words = title.trim().split(/\s+/).filter(Boolean);
+
+  return words.length > 2 ? words.slice(0, 2).join(" ") : title;
+};
+
 export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [active, setActive] = useState(0);
@@ -64,13 +70,14 @@ export default function Projects() {
 
   const proj = projects[active];
 
+  /* Keep the active tab and its nearest neighbor visible while navigating */
   useEffect(() => {
     const tabRow = tabRowRef.current;
     const activeTab = tabRefs.current[active];
 
     if (!tabRow || !activeTab) return;
 
-    // Selecting the first tab always scrolls directly to the left corner (0)
+    // Selecting the first tab always scrolls directly to the left corner (0).
     if (active === 0) {
       tabRow.scrollTo({
         left: 0,
@@ -80,16 +87,15 @@ export default function Projects() {
     }
 
     const rowRect = tabRow.getBoundingClientRect();
-    const activeRect = activeTab.getBoundingClientRect();
     const prevTab = tabRefs.current[active - 1];
     const nextTab = tabRefs.current[active + 1];
 
     const leftTargetRect = prevTab
       ? prevTab.getBoundingClientRect()
-      : activeRect;
+      : activeTab.getBoundingClientRect();
     const rightTargetRect = nextTab
       ? nextTab.getBoundingClientRect()
-      : activeRect;
+      : activeTab.getBoundingClientRect();
 
     if (leftTargetRect.left < rowRect.left) {
       const scrollDiff = leftTargetRect.left - rowRect.left;
@@ -169,6 +175,7 @@ export default function Projects() {
         <div ref={tabRowRef} className="proj-tab-row proj-tab-scroll">
           {projects.map((project, index) => {
             const num = String(project.order ?? index + 1).padStart(2, "0");
+            const isActive = active === index;
 
             return (
               <button
@@ -176,13 +183,22 @@ export default function Projects() {
                   tabRefs.current[index] = element;
                 }}
                 key={project._id || project.slug || project.title}
-                className={`proj-tab ${active === index ? "active" : ""}`}
+                type="button"
+                className={`proj-tab ${isActive ? "active" : ""}`}
                 onClick={() => setActive(index)}
+                aria-pressed={isActive}
+                aria-label={`${num} — ${project.title}`}
               >
                 <span className="proj-tab-full">
                   {num} — {project.title}
                 </span>
-                <span className="proj-tab-short">{num}</span>
+
+                {/* On mobile, show the selected project's name; other tabs stay compact. */}
+                <span className="proj-tab-short">
+                  {isActive
+                    ? `${num} — ${getShortProjectTitle(project.title)}`
+                    : num}
+                </span>
               </button>
             );
           })}
@@ -271,6 +287,14 @@ export default function Projects() {
                   key={project._id || project.slug || project.title}
                   className="proj-mini-card"
                   onClick={() => setActive(originalIndex)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setActive(originalIndex);
+                    }
+                  }}
                 >
                   <div className="proj-mini-img">
                     <img src={project.image} alt={project.title} />
@@ -292,6 +316,13 @@ export default function Projects() {
           .proj-tab-full { display: none; }
           .proj-tab-short { display: inline; }
           .proj-tab { padding: 11px 18px; font-size: 0.82rem; }
+          .proj-tab-short {
+            max-width: min(58vw, 240px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+          }
         }
 
         .proj-tab-scroll {

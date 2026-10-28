@@ -2,6 +2,72 @@ import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 
+const LEGACY_ICON_MAP = {
+  FaReact: "simple-icons:react", FaNodeJs: "simple-icons:nodedotjs",
+  FaHtml5: "simple-icons:html5", FaCss3Alt: "simple-icons:css3", FaGithub: "simple-icons:github",
+  SiJavascript: "simple-icons:javascript", SiTypescript: "simple-icons:typescript",
+  SiTailwindcss: "simple-icons:tailwindcss", SiExpress: "simple-icons:express",
+  SiMongodb: "simple-icons:mongodb", SiPostman: "simple-icons:postman",
+  SiNetlify: "simple-icons:netlify", SiRender: "simple-icons:render", SiAmazons3: "simple-icons:amazonaws",
+};
+const SIMPLE_ICON_ALIASES = { html: "html5", css: "css3", js: "javascript", tailwind: "tailwindcss", node: "nodedotjs", nodejs: "nodedotjs", expressjs: "express", postgres: "postgresql", aws: "amazonaws", amazonaws: "amazonaws", python: "python", mysql: "mysql", react: "react", javascript: "javascript", typescript: "typescript", mongodb: "mongodb", docker: "docker", git: "git", github: "github", java: "java", php: "php", firebase: "firebase", figma: "figma", wordpress: "wordpress", canva: "canva" };
+function normalizeIconIdentifier(icon) {
+  const raw = String(icon || "").trim();
+  if (!raw) return "";
+  if (LEGACY_ICON_MAP[raw]) return LEGACY_ICON_MAP[raw];
+  if (raw.includes(":")) return raw.toLowerCase();
+  const slug = raw.toLowerCase().replace(/\s+/g, "-");
+  return `simple-icons:${SIMPLE_ICON_ALIASES[slug] || slug}`;
+}
+function iconUrl(icon) {
+  const id = normalizeIconIdentifier(icon);
+  const match = id.match(/^([a-z0-9-]+):([a-z0-9-]+)$/i);
+  if (!match) return null;
+  // Keep the source URL independent of the selected color. CSS applies color,
+  // so changing the color never triggers a new icon request.
+  return `https://api.iconify.design/${match[1]}/${match[2]}.svg`;
+}
+
+function IconPreview({ icon, color, size = 30 }) {
+  const src = iconUrl(icon);
+  const [failedSrc, setFailedSrc] = useState("");
+
+  // Track failure per URL. If the color changes, a failure from the previous
+  // image cannot accidentally hide the new preview.
+  const failed = Boolean(src && failedSrc === src);
+
+  if (!src || failed) {
+    return (
+      <span
+        className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white/5 font-bold text-slate-400"
+        style={{ width: size, height: size }}
+        aria-label="Icon preview unavailable"
+        title="Icon preview unavailable"
+      >
+        {String(icon || "?").trim().slice(0, 1).toUpperCase() || "?"}
+      </span>
+    );
+  }
+
+  return (
+    <span
+      key={src}
+      className="inline-block shrink-0"
+      role="img"
+      aria-label={`${String(icon || "Skill").trim()} icon preview`}
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: color || "#61DAFB",
+        WebkitMask: `url("${src}") center / contain no-repeat`,
+        mask: `url("${src}") center / contain no-repeat`,
+      }}
+    >
+      <img src={src} alt="" width={size} height={size} onError={() => setFailedSrc(src)} style={{ display: "none" }} />
+    </span>
+  );
+}
+
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const emptyForm = {
@@ -96,9 +162,13 @@ export default function SkillManagement({ token }) {
     setError("");
 
     try {
+      if (!form.name.trim()) throw new Error("Please enter a skill name.");
+      if (!form.icon.trim()) throw new Error("Please enter an icon name or Iconify identifier.");
+      if (!/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(form.color)) throw new Error("Please choose a valid 3- or 6-digit hexadecimal color.");
+      if (!Number.isInteger(Number(form.order)) || Number(form.order) < 0) throw new Error("Display order must be a non-negative whole number.");
       const payload = {
         name: form.name.trim(),
-        icon: form.icon.trim(),
+        icon: normalizeIconIdentifier(form.icon),
         color: form.color,
         order: Number(form.order),
         published: form.published,
@@ -203,12 +273,13 @@ export default function SkillManagement({ token }) {
           <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-cyan sm:text-xs">
             Management
           </p>
-          <h2 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <h2 className="mt-1 text-xl font-bold text-white sm:text-3xl">
             Skill Management
           </h2>
-          <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-400">
+          <p className="mt-1 text-xs text-slate-400 sm:text-sm">
             Add, edit, and control the skills displayed on your portfolio.
           </p>
+          {!loading && <p className="mt-2 text-xs text-slate-500">{skills.length} total · {skills.filter((skill) => skill.published).length} published · {skills.filter((skill) => !skill.published).length} drafts</p>}
         </div>
 
         {!showForm && (
@@ -242,7 +313,7 @@ export default function SkillManagement({ token }) {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 sm:p-6 lg:p-7"
+          className="space-y-5 rounded-2xl border border-white/10 bg-[#080d12] p-4 sm:p-6 lg:p-7"
         >
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-white">
@@ -272,30 +343,41 @@ export default function SkillManagement({ token }) {
                 required
                 maxLength={80}
                 placeholder="e.g. React"
-                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
+                className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
               />
             </label>
 
-            <label className="space-y-1.5 text-sm text-slate-300">
-              <span>Icon identifier *</span>
-              <input
-                name="icon"
-                value={form.icon}
-                onChange={updateField}
-                required
-                maxLength={100}
-                placeholder="e.g. simple-icons:mysql"
-                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
-              />
-              <span className="block text-xs text-slate-500">
-                Enter an Iconify identifier, for example simple-icons:mysql.
-                Find icons at icon-sets.iconify.design.
+            <div className="space-y-1.5 text-sm text-slate-300">
+              <label htmlFor="skill-icon-input" className="block">Icon name or Iconify identifier *</label>
+              <div className="flex items-stretch gap-3">
+                <div className="flex min-w-0 flex-1 items-center rounded-xl border border-white/10 bg-[#060a0e] px-3 focus-within:ring-1 focus-within:ring-cyan">
+                  <input
+                    id="skill-icon-input"
+                    name="icon"
+                    value={form.icon}
+                    onChange={updateField}
+                    required
+                    maxLength={100}
+                    placeholder="e.g. mysql or logos:docker"
+                    className="min-w-0 w-full bg-transparent py-3 text-sm text-white outline-none"
+                  />
+                </div>
+                <div className="flex w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-white/10 bg-[#060a0e] px-2 py-2" title="Live icon preview">
+                  <IconPreview icon={form.icon} color={form.color} size={30} />
+                  <span className="text-[10px] uppercase tracking-wide text-slate-500">Preview</span>
+                </div>
+              </div>
+              <span className="block text-xs leading-5 text-slate-500">
+                Type a short name such as <code className="text-slate-300">mysql</code>, <code className="text-slate-300">python</code>, or <code className="text-slate-300">react</code>. You can also enter a full ID such as <code className="text-slate-300">logos:docker</code>. Preview updates as you type.
               </span>
-            </label>
+              {form.icon.trim() && (
+                <span className="block break-all text-[11px] text-slate-500">Saved as: {normalizeIconIdentifier(form.icon)}</span>
+              )}
+            </div>
 
             <label className="space-y-1.5 text-sm text-slate-300">
               <span>Brand color</span>
-              <div className="flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3">
+              <div className="flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-[#060a0e] px-3">
                 <input
                   type="color"
                   name="color"
@@ -317,7 +399,7 @@ export default function SkillManagement({ token }) {
                 min="0"
                 step="1"
                 required
-                className="w-full rounded-xl border border-white/10 bg-[#05090d] transition-colors px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
+                className="w-full rounded-xl border border-white/10 bg-[#060a0e] px-3.5 py-3 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan"
               />
             </label>
           </div>
@@ -344,11 +426,11 @@ export default function SkillManagement({ token }) {
       )}
 
       {loading ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-8 text-center text-sm text-slate-400">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12] p-8 text-center text-sm text-slate-400">
           Loading skills...
         </div>
       ) : skills.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] px-5 py-12 text-center">
+        <div className="rounded-2xl border border-white/10 bg-[#080d12] px-5 py-12 text-center">
           <h3 className="font-semibold text-white">No skills yet</h3>
           <p className="mt-2 text-sm text-slate-400">
             Add your first skill to start managing your portfolio skills.
@@ -368,14 +450,13 @@ export default function SkillManagement({ token }) {
           {skills.map((skill) => (
             <article
               key={skill._id}
-              className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 transition hover:border-cyan/30 sm:p-5"
+              className="rounded-2xl border border-white/10 bg-[#080d12] p-4 transition hover:border-cyan/30 sm:p-5"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span
-                    className="h-3.5 w-3.5 shrink-0 rounded-full ring-4 ring-white/5"
-                    style={{ backgroundColor: skill.color || "#61DAFB" }}
-                  />
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03]">
+                    <IconPreview icon={skill.icon} color={skill.color || "#61DAFB"} size={28} />
+                  </span>
                   <div className="min-w-0">
                     <h3 className="wrap-break-word font-bold text-white">
                       {skill.name}
