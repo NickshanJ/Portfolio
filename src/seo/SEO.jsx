@@ -11,6 +11,7 @@ export default function SEO({ title, description, keywords, url, image }) {
       <meta name="keywords" content={keywords} />
       <meta name="author" content="Nickshan J" />
       <meta name="robots" content="index, follow" />
+      <meta property="og:site_name" content="Nickshan J Portfolio" />
 
       {/* Canonical */}
       <link rel="canonical" href={url} />

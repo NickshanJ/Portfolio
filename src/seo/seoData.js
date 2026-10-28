@@ -1,6 +1,6 @@
 const seoData = {
   home: {
-    title: "Nickshan J | MERN Stack Developer",
+    title: "Nickshan J | Front-End & MERN Stack Developer",
     description:
       "Portfolio of Nickshan J, a MERN Stack Developer specializing in React, TypeScript, Node.js, Express, MongoDB, and modern responsive web applications.",
     keywords:
@@ -10,7 +10,7 @@ const seoData = {
   },
 
   about: {
-    title: "About | Nickshan J",
+    title: "About Nickshan J | Web Developer",
     description:
       "Learn more about Nickshan J, a MERN Stack Developer passionate about building responsive, scalable, and user-friendly web applications.",
     keywords:
@@ -20,7 +20,7 @@ const seoData = {
   },
 
   skills: {
-    title: "Skills | Nickshan J",
+    title: "Technical Skills | Nickshan J",
     description:
       "Technical skills including React, TypeScript, JavaScript, Node.js, Express, MongoDB, Tailwind CSS, Git, and REST APIs.",
     keywords:
@@ -30,9 +30,9 @@ const seoData = {
   },
 
   projects: {
-    title: "Projects | Nickshan J",
+    title: "Web Development Projects | Nickshan J",
     description:
-      "Explore my projects including BE Biosal, Vehicle Rental System, Student Teacher Portal, Movies Search App, and Event Management System.",
+      "Explore my web development portfolio to discover projects I've built, the technologies I've used, and the solutions I've created.",
     keywords:
       "BE Biosal, React Projects, MERN Projects, Portfolio Projects",
     url: "https://nickshanjportfolio.netlify.app/projects",
@@ -40,7 +40,7 @@ const seoData = {
   },
 
   contact: {
-    title: "Contact | Nickshan J",
+    title: "Contact Nickshan J | Web Development",
     description:
       "Contact Nickshan J for freelance projects, web development services, and collaboration opportunities.",
     keywords:
