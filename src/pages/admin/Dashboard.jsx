@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import HomeManagement from "./HomeManagement";
 import AboutManagement from "./AboutManagement";
@@ -47,6 +47,47 @@ DashboardIcon.propTypes = {
 export default function Dashboard({ token, onLogout }) {
   const [section, setSection] = useState("Overview");
   const [skillCount, setSkillCount] = useState(null);
+  const mobileNavRef = useRef(null);
+  const mobileNavItemRefs = useRef([]);
+
+  useEffect(() => {
+    const nav = mobileNavRef.current;
+    const activeItem = mobileNavItemRefs.current[navigation.findIndex((item) => item.label === section)];
+
+    if (!nav || !activeItem) return;
+
+    // Keep the selected item and nearby items visible, using the same
+    // horizontal navigation behavior as the public Projects tabs.
+    const navRect = nav.getBoundingClientRect();
+    const activeRect = activeItem.getBoundingClientRect();
+    const activeIndex = navigation.findIndex((item) => item.label === section);
+    const previousItem = mobileNavItemRefs.current[activeIndex - 1];
+    const nextItem = mobileNavItemRefs.current[activeIndex + 1];
+
+    if (activeIndex === 0) {
+      nav.scrollTo({ left: 0, behavior: "smooth" });
+      return;
+    }
+
+    const leftRect = previousItem
+      ? previousItem.getBoundingClientRect()
+      : activeRect;
+    const rightRect = nextItem
+      ? nextItem.getBoundingClientRect()
+      : activeRect;
+
+    if (leftRect.left < navRect.left) {
+      nav.scrollTo({
+        left: Math.max(0, nav.scrollLeft + leftRect.left - navRect.left),
+        behavior: "smooth",
+      });
+    } else if (rightRect.right > navRect.right) {
+      nav.scrollTo({
+        left: nav.scrollLeft + rightRect.right - navRect.right,
+        behavior: "smooth",
+      });
+    }
+  }, [section]);
 
   useEffect(() => {
     let isActive = true;
@@ -204,7 +245,7 @@ export default function Dashboard({ token, onLogout }) {
       </header>
 
       <div className="relative mx-auto grid max-w-375 gap-5 px-4 py-5 sm:px-6 sm:py-7 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-7 lg:px-8 lg:py-8">
-        <aside className="h-fit rounded-2xl border border-white/8 bg-[#080d12]/90 p-2 shadow-[0_16px_50px_rgba(0,0,0,0.18)] lg:sticky lg:top-23">
+        <aside className="hidden h-fit rounded-2xl border border-white/8 bg-[#080d12]/90 p-2 shadow-[0_16px_50px_rgba(0,0,0,0.18)] lg:sticky lg:top-23 lg:block">
           <p className="hidden px-3 pb-3 pt-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 lg:block">
             Workspace menu
           </p>
@@ -223,7 +264,7 @@ export default function Dashboard({ token, onLogout }) {
                   className={`relative flex min-h-11 items-center justify-center gap-2 rounded-xl px-2 py-2 text-xs font-semibold transition sm:text-sm lg:justify-start lg:px-3.5 lg:py-3 ${active ? "border border-cyan-300/20 bg-cyan-300/9 text-cyan-200" : "border border-transparent text-slate-500 hover:bg-white/4 hover:text-slate-200"}`}
                 >
                   {active && (
-                    <span className="absolute bottom-2 left-1 hidden h-5 w-0.5 rounded-full bg-cyan-300 lg:block" />
+                    <span className="absolute left-1 top-1/2 hidden h-5 w-0.5 -translate-y-1/2 rounded-full bg-cyan-300 lg:block" />
                   )}
                   <DashboardIcon type={item.icon} />
                   <span className="truncate">{item.shortLabel}</span>
@@ -249,7 +290,38 @@ export default function Dashboard({ token, onLogout }) {
           </div>
         </aside>
 
-        <div className="min-w-0 pb-10">
+        {/* Mobile floating navigation: one horizontally scrollable row at the bottom. */}
+        <nav
+          ref={mobileNavRef}
+          aria-label="Mobile Admin Navigation"
+          className="fixed inset-x-3 bottom-3 z-50 flex max-w-[calc(100%-1.5rem)] gap-1 overflow-x-auto rounded-2xl border border-white/10 bg-[#080d12]/95 p-2 shadow-[0_16px_50px_rgba(0,0,0,0.45)] backdrop-blur-2xl lg:hidden"
+          style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+        >
+          {navigation.map((item, index) => {
+            const isActive = section === item.label;
+            return (
+              <button
+                key={item.label}
+                ref={(element) => {
+                  mobileNavItemRefs.current[index] = element;
+                }}
+                type="button"
+                onClick={() => openSection(item.label)}
+                aria-current={isActive ? "page" : undefined}
+                className={`relative flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${
+                  isActive
+                    ? "border border-cyan-300/25 bg-cyan-300/10 text-cyan-200"
+                    : "border border-transparent text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                }`}
+              >
+                <DashboardIcon type={item.icon} />
+                <span>{item.shortLabel}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="min-w-0 pb-24 lg:pb-10">
           {section === "Overview" && (
             <section className="space-y-6 sm:space-y-7">
               <div className="flex flex-col justify-between gap-4 border-b border-white/[0.07] pb-5 sm:flex-row sm:items-end sm:pb-6">

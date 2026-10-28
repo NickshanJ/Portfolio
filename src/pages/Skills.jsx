@@ -24,28 +24,64 @@ const LEGACY_ICONS = {
   SiAmazons3: "simple-icons:amazonaws",
 };
 
-function getIconUrl(icon, color) {
-  const identifier = LEGACY_ICONS[icon] || icon;
+// Common short names that differ from their Simple Icons slug.
+const SIMPLE_ICON_ALIASES = {
+  html: "html5",
+  css: "css3",
+  js: "javascript",
+  javascript: "javascript",
+  typescript: "typescript",
+  tailwind: "tailwindcss",
+  node: "nodedotjs",
+  nodejs: "nodedotjs",
+  expressjs: "express",
+  mongodb: "mongodb",
+  mysql: "mysql",
+  postgres: "postgresql",
+  github: "github",
+  git: "git",
+  python: "python",
+  java: "java",
+  php: "php",
+  docker: "docker",
+  aws: "amazonaws",
+  amazonaws: "amazonaws",
+  firebase: "firebase",
+  figma: "figma",
+  wordpress: "wordpress",
+  canva: "canva",
+  react: "react",
+  netlify: "netlify",
+  render: "render",
+  postman: "postman",
+};
 
-  // Accept Iconify identifiers, not arbitrary URLs.
+export function normalizeIconIdentifier(icon) {
+  const raw = String(icon || "").trim();
+  if (!raw) return "";
+
+  const legacy = LEGACY_ICONS[raw];
+  if (legacy) return legacy;
+
+  // Keep complete Iconify IDs from any collection unchanged.
+  if (raw.includes(":")) return raw.toLowerCase();
+
+  const slug = raw.toLowerCase().replace(/\s+/g, "-");
+  return `simple-icons:${SIMPLE_ICON_ALIASES[slug] || slug}`;
+}
+
+export function getIconUrl(icon) {
+  const identifier = normalizeIconIdentifier(icon);
   const match = identifier.match(/^([a-z0-9-]+):([a-z0-9-]+)$/i);
-
   if (!match) return null;
-
-  const [, collection, name] = match;
-
-  const params = new URLSearchParams({ color });
-
-  return `https://api.iconify.design/${collection}/${name}.svg?${params.toString()}`;
+  // Keep the source URL stable; CSS mask applies the selected skill color.
+  return `https://api.iconify.design/${match[1]}/${match[2]}.svg`;
 }
 
 function SkillIcon({ icon, color, name }) {
-  const [failed, setFailed] = useState(false);
-  const iconUrl = getIconUrl(icon, color);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [icon, color]);
+  const iconUrl = getIconUrl(icon);
+  const [failedSrc, setFailedSrc] = useState("");
+  const failed = Boolean(iconUrl && failedSrc === iconUrl);
 
   if (!iconUrl || failed) {
     return (
@@ -71,19 +107,21 @@ function SkillIcon({ icon, color, name }) {
   }
 
   return (
-    <img
-      src={iconUrl}
-      alt=""
-      width="28"
-      height="28"
-      loading="lazy"
-      onError={() => setFailed(true)}
+    <span
+      key={iconUrl}
+      role="img"
+      aria-label={`${name} icon`}
+      className="inline-block"
       style={{
         width: 28,
         height: 28,
-        objectFit: "contain",
+        backgroundColor: color || "#61DAFB",
+        WebkitMask: `url("${iconUrl}") center / contain no-repeat`,
+        mask: `url("${iconUrl}") center / contain no-repeat`,
       }}
-    />
+    >
+      <img src={iconUrl} alt="" width="28" height="28" loading="lazy" onError={() => setFailedSrc(iconUrl)} style={{ display: "none" }} />
+    </span>
   );
 }
 
