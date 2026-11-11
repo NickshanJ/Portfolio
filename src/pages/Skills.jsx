@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import SEO from "../seo/SEO";
 import seoData from "../seo/seoData";
 
-const API_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 // Compatibility mappings for skills already stored in MongoDB.
 // New skills should use Iconify identifiers directly.
@@ -120,7 +119,15 @@ function SkillIcon({ icon, color, name }) {
         mask: `url("${iconUrl}") center / contain no-repeat`,
       }}
     >
-      <img src={iconUrl} alt="" width="28" height="28" loading="lazy" onError={() => setFailedSrc(iconUrl)} style={{ display: "none" }} />
+      <img
+        src={iconUrl}
+        alt=""
+        width="28"
+        height="28"
+        loading="lazy"
+        onError={() => setFailedSrc(iconUrl)}
+        style={{ display: "none" }}
+      />
     </span>
   );
 }
@@ -129,7 +136,11 @@ export default function Skills() {
   const [skills, setSkills] = useState([]);
 
   useEffect(() => {
-    document.body.classList.remove("allow-scroll");
+    document.body.classList.add("allow-scroll");
+
+    return () => {
+      document.body.classList.remove("allow-scroll");
+    };
   }, []);
 
   useEffect(() => {
@@ -169,7 +180,7 @@ export default function Skills() {
   }, []);
 
   return (
-    <div className="page-wrap">
+    <div className="page-wrap skills-page-wrap">
       <SEO {...seoData.skills} />
 
       <div className="page-inner">
