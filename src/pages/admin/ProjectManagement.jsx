@@ -386,6 +386,7 @@ function ProjectManagement({ token }) {
   const [editingProject, setEditingProject] = useState(null);
   const [modal, setModal] = useState(null);
   const [pendingDeleteProject, setPendingDeleteProject] = useState(null);
+  const [reordering, setReordering] = useState(false);
 
   const loadProjects = useCallback(async () => {
     setLoading(true);
@@ -420,6 +421,10 @@ function ProjectManagement({ token }) {
     projects.length > 0
       ? Math.max(...projects.map((project) => Number(project.order) || 0)) + 1
       : 1;
+
+  const sortedProjects = [...projects].sort(
+    (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0),
+  );
 
   function handleDelete(project) {
     setPendingDeleteProject(project);
@@ -478,6 +483,99 @@ function ProjectManagement({ token }) {
       setPendingDeleteProject(null);
     } finally {
       setDeletingId("");
+    }
+  }
+
+  async function moveProject(project, direction) {
+    if (reordering) return;
+
+    const sortedProjects = [...projects].sort(
+      (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0),
+    );
+
+    const currentIndex = sortedProjects.findIndex(
+      (item) => item._id === project._id,
+    );
+
+    const targetIndex = currentIndex + direction;
+
+    if (
+      currentIndex < 0 ||
+      targetIndex < 0 ||
+      targetIndex >= sortedProjects.length
+    ) {
+      return;
+    }
+
+    const currentProject = sortedProjects[currentIndex];
+    const targetProject = sortedProjects[targetIndex];
+
+    const currentOrder = Number(currentProject.order) || 0;
+    const targetOrder = Number(targetProject.order) || 0;
+
+    setReordering(true);
+    setError("");
+
+    try {
+      async function updateProjectOrder(item, newOrder) {
+        const response = await fetch(
+          `${API_URL}/api/admin/projects/${item._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              title: item.title,
+              description: item.description,
+              category: item.category,
+              technologies: item.technologies || [],
+              liveUrl: item.liveUrl || "",
+              frontendUrl: item.frontendUrl || "",
+              backendUrl: item.backendUrl || "",
+              image: item.image || "",
+              imagePublicId: item.imagePublicId || "",
+              featured: item.featured ?? false,
+              published: item.published ?? true,
+              order: newOrder,
+            }),
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || `Unable to update ${item.title}.`);
+        }
+      }
+
+      // Swap the two project positions in the database.
+      await updateProjectOrder(currentProject, targetOrder);
+      await updateProjectOrder(targetProject, currentOrder);
+
+      setProjects((previous) =>
+        previous
+          .map((item) => {
+            if (item._id === currentProject._id) {
+              return { ...item, order: targetOrder };
+            }
+
+            if (item._id === targetProject._id) {
+              return { ...item, order: currentOrder };
+            }
+
+            return item;
+          })
+          .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)),
+      );
+    } catch (err) {
+      setError(err.message || "Unable to rearrange projects.");
+
+      // Refresh in case only one database update succeeded.
+      await loadProjects();
+    } finally {
+      setReordering(false);
     }
   }
 
@@ -588,7 +686,7 @@ function ProjectManagement({ token }) {
         </div>
       ) : !loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-          {projects.map((project) => (
+          {sortedProjects.map((project, index) => (
             <article
               key={project._id}
               className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] transition hover:border-cyan/30"
@@ -649,9 +747,35 @@ function ProjectManagement({ token }) {
                       </p>
                     </div>
 
-                    <span className="shrink-0 rounded-lg border border-cyan/25 bg-cyan/10 px-2 py-0.5 text-xs font-bold text-cyan">
-                      Order #{project.order ?? 1}
-                    </span>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      <span className="rounded-lg border border-cyan/25 bg-cyan/10 px-2 py-1 text-xs font-bold text-cyan">
+                        Order #{project.order ?? 1}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() => moveProject(project, -1)}
+                        disabled={reordering || index === 0}
+                        title="Move project up"
+                        aria-label={`Move ${project.title} up`}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition hover:border-cyan/40 hover:bg-cyan/10 hover:text-cyan disabled:cursor-not-allowed disabled:opacity-25"
+                      >
+                        ↑
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => moveProject(project, 1)}
+                        disabled={
+                          reordering || index === sortedProjects.length - 1
+                        }
+                        title="Move project down"
+                        aria-label={`Move ${project.title} down`}
+                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition hover:border-cyan/40 hover:bg-cyan/10 hover:text-cyan disabled:cursor-not-allowed disabled:opacity-25"
+                      >
+                        ↓
+                      </button>
+                    </div>
                   </div>
 
                   <p className="line-clamp-2 text-xs leading-relaxed text-slate-400 sm:line-clamp-3 sm:text-sm">

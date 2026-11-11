@@ -3,14 +3,48 @@ import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 
 const LEGACY_ICON_MAP = {
-  FaReact: "simple-icons:react", FaNodeJs: "simple-icons:nodedotjs",
-  FaHtml5: "simple-icons:html5", FaCss3Alt: "simple-icons:css3", FaGithub: "simple-icons:github",
-  SiJavascript: "simple-icons:javascript", SiTypescript: "simple-icons:typescript",
-  SiTailwindcss: "simple-icons:tailwindcss", SiExpress: "simple-icons:express",
-  SiMongodb: "simple-icons:mongodb", SiPostman: "simple-icons:postman",
-  SiNetlify: "simple-icons:netlify", SiRender: "simple-icons:render", SiAmazons3: "simple-icons:amazonaws",
+  FaReact: "simple-icons:react",
+  FaNodeJs: "simple-icons:nodedotjs",
+  FaHtml5: "simple-icons:html5",
+  FaCss3Alt: "simple-icons:css3",
+  FaGithub: "simple-icons:github",
+  SiJavascript: "simple-icons:javascript",
+  SiTypescript: "simple-icons:typescript",
+  SiTailwindcss: "simple-icons:tailwindcss",
+  SiExpress: "simple-icons:express",
+  SiMongodb: "simple-icons:mongodb",
+  SiPostman: "simple-icons:postman",
+  SiNetlify: "simple-icons:netlify",
+  SiRender: "simple-icons:render",
+  SiAmazons3: "simple-icons:amazonaws",
 };
-const SIMPLE_ICON_ALIASES = { html: "html5", css: "css3", js: "javascript", tailwind: "tailwindcss", node: "nodedotjs", nodejs: "nodedotjs", expressjs: "express", postgres: "postgresql", aws: "amazonaws", amazonaws: "amazonaws", python: "python", mysql: "mysql", react: "react", javascript: "javascript", typescript: "typescript", mongodb: "mongodb", docker: "docker", git: "git", github: "github", java: "java", php: "php", firebase: "firebase", figma: "figma", wordpress: "wordpress", canva: "canva" };
+const SIMPLE_ICON_ALIASES = {
+  html: "html5",
+  css: "css3",
+  js: "javascript",
+  tailwind: "tailwindcss",
+  node: "nodedotjs",
+  nodejs: "nodedotjs",
+  expressjs: "express",
+  postgres: "postgresql",
+  aws: "amazonaws",
+  amazonaws: "amazonaws",
+  python: "python",
+  mysql: "mysql",
+  react: "react",
+  javascript: "javascript",
+  typescript: "typescript",
+  mongodb: "mongodb",
+  docker: "docker",
+  git: "git",
+  github: "github",
+  java: "java",
+  php: "php",
+  firebase: "firebase",
+  figma: "figma",
+  wordpress: "wordpress",
+  canva: "canva",
+};
 function normalizeIconIdentifier(icon) {
   const raw = String(icon || "").trim();
   if (!raw) return "";
@@ -44,7 +78,10 @@ function IconPreview({ icon, color, size = 30 }) {
         aria-label="Icon preview unavailable"
         title="Icon preview unavailable"
       >
-        {String(icon || "?").trim().slice(0, 1).toUpperCase() || "?"}
+        {String(icon || "?")
+          .trim()
+          .slice(0, 1)
+          .toUpperCase() || "?"}
       </span>
     );
   }
@@ -63,7 +100,14 @@ function IconPreview({ icon, color, size = 30 }) {
         mask: `url("${src}") center / contain no-repeat`,
       }}
     >
-      <img src={src} alt="" width={size} height={size} onError={() => setFailedSrc(src)} style={{ display: "none" }} />
+      <img
+        src={src}
+        alt=""
+        width={size}
+        height={size}
+        onError={() => setFailedSrc(src)}
+        style={{ display: "none" }}
+      />
     </span>
   );
 }
@@ -89,6 +133,7 @@ export default function SkillManagement({ token }) {
   const [error, setError] = useState("");
   const [pendingDelete, setPendingDelete] = useState(null);
   const [modal, setModal] = useState(null);
+  const [reordering, setReordering] = useState(false);
 
   const loadSkills = useCallback(async () => {
     setLoading(true);
@@ -163,9 +208,14 @@ export default function SkillManagement({ token }) {
 
     try {
       if (!form.name.trim()) throw new Error("Please enter a skill name.");
-      if (!form.icon.trim()) throw new Error("Please enter an icon name or Iconify identifier.");
-      if (!/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(form.color)) throw new Error("Please choose a valid 3- or 6-digit hexadecimal color.");
-      if (!Number.isInteger(Number(form.order)) || Number(form.order) < 0) throw new Error("Display order must be a non-negative whole number.");
+      if (!form.icon.trim())
+        throw new Error("Please enter an icon name or Iconify identifier.");
+      if (!/^#(?:[0-9a-f]{3}|[0-9a-f]{6})$/i.test(form.color))
+        throw new Error(
+          "Please choose a valid 3- or 6-digit hexadecimal color.",
+        );
+      if (!Number.isInteger(Number(form.order)) || Number(form.order) < 0)
+        throw new Error("Display order must be a non-negative whole number.");
       const payload = {
         name: form.name.trim(),
         icon: normalizeIconIdentifier(form.icon),
@@ -260,6 +310,95 @@ export default function SkillManagement({ token }) {
     }
   }
 
+  async function moveSkill(skill, direction) {
+    if (reordering) return;
+
+    // Always work with skills in their current display order.
+    const sortedSkills = [...skills].sort(
+      (a, b) => (Number(a.order) || 0) - (Number(b.order) || 0),
+    );
+
+    const currentIndex = sortedSkills.findIndex(
+      (item) => item._id === skill._id,
+    );
+
+    const targetIndex = currentIndex + direction;
+
+    // Prevent moving beyond the first or last position.
+    if (
+      currentIndex < 0 ||
+      targetIndex < 0 ||
+      targetIndex >= sortedSkills.length
+    ) {
+      return;
+    }
+
+    const currentSkill = sortedSkills[currentIndex];
+    const targetSkill = sortedSkills[targetIndex];
+
+    const currentOrder = Number(currentSkill.order) || 0;
+    const targetOrder = Number(targetSkill.order) || 0;
+
+    setReordering(true);
+    setError("");
+
+    try {
+      async function updateSkillOrder(item, newOrder) {
+        const response = await fetch(
+          `${API_URL}/api/admin/skills/${item._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              name: item.name,
+              icon: item.icon,
+              color: item.color,
+              order: newOrder,
+              published: item.published,
+            }),
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || `Unable to update ${item.name}.`);
+        }
+      }
+
+      // Swap the two display positions.
+      await updateSkillOrder(currentSkill, targetOrder);
+      await updateSkillOrder(targetSkill, currentOrder);
+
+      setSkills((previous) =>
+        previous
+          .map((item) => {
+            if (item._id === currentSkill._id) {
+              return { ...item, order: targetOrder };
+            }
+
+            if (item._id === targetSkill._id) {
+              return { ...item, order: currentOrder };
+            }
+
+            return item;
+          })
+          .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0)),
+      );
+    } catch (err) {
+      setError(err.message || "Unable to rearrange skills.");
+
+      // Reload from the database in case one update succeeded
+      // before the other one failed.
+      await loadSkills();
+    } finally {
+      setReordering(false);
+    }
+  }
+
   function closeModal() {
     if (deletingId) return;
     setModal(null);
@@ -279,7 +418,13 @@ export default function SkillManagement({ token }) {
           <p className="mt-1 text-xs text-slate-400 sm:text-sm">
             Add, edit, and control the skills displayed on your portfolio.
           </p>
-          {!loading && <p className="mt-2 text-xs text-slate-500">{skills.length} total · {skills.filter((skill) => skill.published).length} published · {skills.filter((skill) => !skill.published).length} drafts</p>}
+          {!loading && (
+            <p className="mt-2 text-xs text-slate-500">
+              {skills.length} total ·{" "}
+              {skills.filter((skill) => skill.published).length} published ·{" "}
+              {skills.filter((skill) => !skill.published).length} drafts
+            </p>
+          )}
         </div>
 
         {!showForm && (
@@ -348,7 +493,9 @@ export default function SkillManagement({ token }) {
             </label>
 
             <div className="space-y-1.5 text-sm text-slate-300">
-              <label htmlFor="skill-icon-input" className="block">Icon name or Iconify identifier *</label>
+              <label htmlFor="skill-icon-input" className="block">
+                Icon name or Iconify identifier *
+              </label>
               <div className="flex items-stretch gap-3">
                 <div className="flex min-w-0 flex-1 items-center rounded-xl border border-white/10 bg-[#060a0e] px-3 focus-within:ring-1 focus-within:ring-cyan">
                   <input
@@ -362,16 +509,29 @@ export default function SkillManagement({ token }) {
                     className="min-w-0 w-full bg-transparent py-3 text-sm text-white outline-none"
                   />
                 </div>
-                <div className="flex w-[76px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-white/10 bg-[#060a0e] px-2 py-2" title="Live icon preview">
+                <div
+                  className="flex w-19 shrink-0 flex-col items-center justify-center gap-1 rounded-xl border border-white/10 bg-[#060a0e] px-2 py-2"
+                  title="Live icon preview"
+                >
                   <IconPreview icon={form.icon} color={form.color} size={30} />
-                  <span className="text-[10px] uppercase tracking-wide text-slate-500">Preview</span>
+                  <span className="text-[10px] uppercase tracking-wide text-slate-500">
+                    Preview
+                  </span>
                 </div>
               </div>
               <span className="block text-xs leading-5 text-slate-500">
-                Type a short name such as <code className="text-slate-300">mysql</code>, <code className="text-slate-300">python</code>, or <code className="text-slate-300">react</code>. You can also enter a full ID such as <code className="text-slate-300">logos:docker</code>. Preview updates as you type.
+                Type a short name such as{" "}
+                <code className="text-slate-300">mysql</code>,{" "}
+                <code className="text-slate-300">python</code>, or{" "}
+                <code className="text-slate-300">react</code>. You can also
+                enter a full ID such as{" "}
+                <code className="text-slate-300">logos:docker</code>. Preview
+                updates as you type.
               </span>
               {form.icon.trim() && (
-                <span className="block break-all text-[11px] text-slate-500">Saved as: {normalizeIconIdentifier(form.icon)}</span>
+                <span className="block break-all text-[11px] text-slate-500">
+                  Saved as: {normalizeIconIdentifier(form.icon)}
+                </span>
               )}
             </div>
 
@@ -454,8 +614,12 @@ export default function SkillManagement({ token }) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03]">
-                    <IconPreview icon={skill.icon} color={skill.color || "#61DAFB"} size={28} />
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/3">
+                    <IconPreview
+                      icon={skill.icon}
+                      color={skill.color || "#61DAFB"}
+                      size={28}
+                    />
                   </span>
                   <div className="min-w-0">
                     <h3 className="wrap-break-word font-bold text-white">
@@ -478,8 +642,42 @@ export default function SkillManagement({ token }) {
                 </span>
               </div>
 
-              <div className="mt-4 flex items-center justify-between text-xs text-slate-400">
-                <span>Order: {skill.order ?? 1}</span>
+              <div className="mt-4 flex items-center justify-between gap-2 text-xs text-slate-400">
+                <div className="flex items-center gap-2">
+                  <span>Order: {skill.order ?? 1}</span>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => moveSkill(skill, -1)}
+                      disabled={
+                        reordering ||
+                        Number(skill.order) === Number(skills[0]?.order)
+                      }
+                      title="Move skill up"
+                      aria-label={`Move ${skill.name} up`}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition hover:border-cyan/40 hover:bg-cyan/10 hover:text-cyan disabled:cursor-not-allowed disabled:opacity-25"
+                    >
+                      ↑
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => moveSkill(skill, 1)}
+                      disabled={
+                        reordering ||
+                        Number(skill.order) ===
+                          Number(skills[skills.length - 1]?.order)
+                      }
+                      title="Move skill down"
+                      aria-label={`Move ${skill.name} down`}
+                      className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition hover:border-cyan/40 hover:bg-cyan/10 hover:text-cyan disabled:cursor-not-allowed disabled:opacity-25"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                </div>
+
                 <span>{skill.color || "#61DAFB"}</span>
               </div>
 

@@ -26,9 +26,11 @@ const DEFAULT_SKILLS = {
   tools: ["Git", "Postman", "VSCode"],
 };
 
+
 const FRONTEND_KEYWORDS = [
-  "html", "css", "tailwind", "bootstrap", "javascript",
-  "typescript", "react", "next.js", "nextjs", "vite",
+  "html", "css", "tailwind", "nativewind", "bootstrap",
+  "javascript", "typescript", "react", "react native",
+  "react-native", "next.js", "nextjs", "vite",
   "redux", "zustand", "sass", "scss", "frontend",
   "front-end", "ui/ux",
 ];
@@ -40,12 +42,13 @@ const BACKEND_KEYWORDS = [
   "authentication", "jwt", "firebase", "redis",
 ];
 
+
 const TOOL_KEYWORDS = [
   "git", "github", "gitlab", "postman", "vscode",
   "vs code", "visual studio code", "npm", "pnpm",
   "yarn", "webpack", "docker", "aws", "netlify",
   "render", "cloudinary", "figma", "jira", "linux",
-  "vercel", "devops", "ci/cd",
+  "vercel", "devops", "ci/cd", "expo", "expo go",
 ];
 
 function getSkillName(skill) {
