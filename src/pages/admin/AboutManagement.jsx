@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { adminFetch } from "../../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -29,10 +30,13 @@ export default function AboutManagement({ token }) {
 
     async function loadAbout() {
       try {
-        const response = await fetch(`${API_URL}/api/admin/about`, {
-          headers: { Authorization: `Bearer ${token}` },
-          signal: controller.signal,
-        });
+        const response = await adminFetch(
+          `${API_URL}/api/admin/about`,
+          {
+            signal: controller.signal,
+          },
+          token,
+        );
 
         const data = await response.json();
 
@@ -132,11 +136,14 @@ export default function AboutManagement({ token }) {
     setUploading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/uploads/about-image`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+      const response = await adminFetch(
+        `${API_URL}/api/uploads/about-image`,
+        {
+          method: "POST",
+          body: formData,
+        },
+        token,
+      );
 
       const data = await response.json();
 
@@ -180,14 +187,17 @@ export default function AboutManagement({ token }) {
     try {
       const profileImage = await uploadImage();
 
-      const response = await fetch(`${API_URL}/api/admin/about`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await adminFetch(
+        `${API_URL}/api/admin/about`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ profileImage, paragraphs, infoItems }),
         },
-        body: JSON.stringify({ profileImage, paragraphs, infoItems }),
-      });
+        token,
+      );
 
       const data = await response.json();
 

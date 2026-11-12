@@ -1,10 +1,7 @@
 import express from "express";
 import About from "../models/About.js";
-import { requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
-
-router.use(requireAdmin);
 
 const DEFAULT_ABOUT = {
   key: "about",

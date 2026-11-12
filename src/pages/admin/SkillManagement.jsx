@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { adminFetch } from "../../utils/api";
 
 const LEGACY_ICON_MAP = {
   FaReact: "simple-icons:react",
@@ -140,11 +141,11 @@ export default function SkillManagement({ token }) {
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/skills`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await adminFetch(
+        `${API_URL}/api/admin/skills`,
+        {},
+        token,
+      );
 
       const data = await response.json();
 
@@ -224,7 +225,7 @@ export default function SkillManagement({ token }) {
         published: form.published,
       };
 
-      const response = await fetch(
+      const response = await adminFetch(
         editingId
           ? `${API_URL}/api/admin/skills/${editingId}`
           : `${API_URL}/api/admin/skills`,
@@ -232,10 +233,10 @@ export default function SkillManagement({ token }) {
           method: editingId ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         },
+        token,
       );
 
       const data = await response.json();
@@ -277,12 +278,13 @@ export default function SkillManagement({ token }) {
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/skills/${skill._id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await adminFetch(
+        `${API_URL}/api/admin/skills/${skill._id}`,
+        {
+          method: "DELETE",
         },
-      });
+        token,
+      );
 
       const data = await response.json();
 
@@ -344,13 +346,12 @@ export default function SkillManagement({ token }) {
 
     try {
       async function updateSkillOrder(item, newOrder) {
-        const response = await fetch(
+        const response = await adminFetch(
           `${API_URL}/api/admin/skills/${item._id}`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               name: item.name,
@@ -360,6 +361,7 @@ export default function SkillManagement({ token }) {
               published: item.published,
             }),
           },
+          token,
         );
 
         const data = await response.json();

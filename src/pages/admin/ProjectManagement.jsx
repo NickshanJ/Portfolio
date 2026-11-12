@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { adminFetch } from "../../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -57,13 +58,14 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
     setUploading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/uploads/project-image`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await adminFetch(
+        `${API_URL}/api/uploads/project-image`,
+        {
+          method: "POST",
+          body,
         },
-        body,
-      });
+        token,
+      );
 
       const data = await response.json();
 
@@ -111,7 +113,7 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
         order: Number(form.order),
       };
 
-      const response = await fetch(
+      const response = await adminFetch(
         project
           ? `${API_URL}/api/admin/projects/${project._id}`
           : `${API_URL}/api/admin/projects`,
@@ -119,10 +121,10 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
           method: project ? "PUT" : "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         },
+        token,
       );
 
       const data = await response.json();
@@ -393,11 +395,11 @@ function ProjectManagement({ token }) {
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/api/admin/projects`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await adminFetch(
+        `${API_URL}/api/admin/projects`,
+        {},
+        token,
+      );
 
       const data = await response.json();
 
@@ -447,14 +449,12 @@ function ProjectManagement({ token }) {
     setError("");
 
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `${API_URL}/api/admin/projects/${project._id}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
+        token,
       );
 
       const data = await response.json();
@@ -518,13 +518,12 @@ function ProjectManagement({ token }) {
 
     try {
       async function updateProjectOrder(item, newOrder) {
-        const response = await fetch(
+        const response = await adminFetch(
           `${API_URL}/api/admin/projects/${item._id}`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               title: item.title,
@@ -541,6 +540,7 @@ function ProjectManagement({ token }) {
               order: newOrder,
             }),
           },
+          token,
         );
 
         const data = await response.json();

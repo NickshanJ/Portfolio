@@ -1,11 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import Skill from "../models/Skill.js";
-import { requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
-
-router.use(requireAdmin);
 
 function validateSkill(body) {
   const { name, icon, color, order, published } = body;

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { adminFetch } from "../../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -137,19 +138,22 @@ export default function HomeManagement({ token }) {
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/settings/admin/home`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await adminFetch(
+        `${API_URL}/api/settings/admin/home`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            roleTitles,
+            description: form.description.trim(),
+            experienceYears,
+            terminalName: form.terminalName.trim(),
+          }),
         },
-        body: JSON.stringify({
-          roleTitles,
-          description: form.description.trim(),
-          experienceYears,
-          terminalName: form.terminalName.trim(),
-        }),
-      });
+        token,
+      );
 
       const data = await response.json();
 

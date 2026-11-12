@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { adminFetch } from "../../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -73,13 +74,14 @@ function ResumeManagement({ token }) {
       const formData = new FormData();
       formData.append("resume", selectedFile);
 
-      const uploadResponse = await fetch(`${API_URL}/api/uploads/resume`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const uploadResponse = await adminFetch(
+        `${API_URL}/api/uploads/resume`,
+        {
+          method: "POST",
+          body: formData,
         },
-        body: formData,
-      });
+        token,
+      );
 
       const uploadData = await uploadResponse.json();
 
@@ -87,17 +89,20 @@ function ResumeManagement({ token }) {
         throw new Error(uploadData.message || "Resume upload failed.");
       }
 
-      const saveResponse = await fetch(`${API_URL}/api/settings/admin/resume`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const saveResponse = await adminFetch(
+        `${API_URL}/api/settings/admin/resume`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            resumeUrl: uploadData.url,
+            resumePublicId: uploadData.publicId,
+          }),
         },
-        body: JSON.stringify({
-          resumeUrl: uploadData.url,
-          resumePublicId: uploadData.publicId,
-        }),
-      });
+        token,
+      );
 
       const saveData = await saveResponse.json();
 
