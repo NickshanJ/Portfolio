@@ -3,11 +3,41 @@ import multer from "multer";
 import { randomUUID } from "node:crypto";
 import { v2 as cloudinary } from "cloudinary";
 import { requireAdmin } from "../middleware/auth.js";
+import { fileTypeFromBuffer } from "file-type";
+import { rateLimit } from "express-rate-limit";
 
 const router = express.Router();
 
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many upload attempts. Please try again after 15 minutes.",
+  },
+});
+
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 const MAX_PDF_SIZE = 10 * 1024 * 1024;
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+async function validateFileSignature(buffer, allowedTypes, expectedMime) {
+  try {
+    const detectedFile = await fileTypeFromBuffer(buffer);
+
+    return Boolean(
+      detectedFile &&
+      allowedTypes.includes(detectedFile.mime) &&
+      detectedFile.mime === expectedMime,
+    );
+  } catch (error) {
+    console.error("File signature validation failed:", error.message);
+    return false;
+  }
+}
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -16,18 +46,12 @@ const upload = multer({
     files: 1,
   },
   fileFilter: (_req, file, callback) => {
-    const allowedTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/webp",
-    ];
-
     if (
-      !allowedTypes.includes(file.mimetype) &&
+      !ALLOWED_IMAGE_TYPES.includes(file.mimetype) &&
       file.mimetype !== "application/pdf"
     ) {
       return callback(
-        new Error("Only JPG, PNG, WebP images and PDF files are allowed")
+        new Error("Only JPG, PNG, WebP images and PDF files are allowed"),
       );
     }
 
@@ -42,7 +66,7 @@ function uploadToCloudinary(buffer, options) {
       (error, result) => {
         if (error) return reject(error);
         resolve(result);
-      }
+      },
     );
 
     stream.end(buffer);
@@ -50,6 +74,7 @@ function uploadToCloudinary(buffer, options) {
 }
 
 router.use(requireAdmin);
+router.use(uploadLimiter);
 
 // POST /api/uploads/project-image
 router.post("/project-image", (req, res) => {
@@ -72,6 +97,20 @@ router.post("/project-image", (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Images must be 5 MB or smaller",
+      });
+    }
+
+    const isValidImage = await validateFileSignature(
+      req.file.buffer,
+      ALLOWED_IMAGE_TYPES,
+      req.file.mimetype,
+    );
+
+    if (!isValidImage) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid image file. Only genuine JPG, PNG, or WebP files are allowed.",
       });
     }
 
@@ -121,13 +160,27 @@ router.post("/resume", (req, res) => {
       });
     }
 
+    if (req.file.size > MAX_PDF_SIZE) {
+      return res.status(400).json({
+        success: false,
+        message: "PDF resumes must be 10 MB or smaller",
+      });
+    }
+
+    const isValidPDF = await validateFileSignature(
+      req.file.buffer,
+      ["application/pdf"],
+      req.file.mimetype,
+    );
+
     if (
+      !isValidPDF ||
       req.file.mimetype !== "application/pdf" ||
       !req.file.originalname.toLowerCase().endsWith(".pdf")
     ) {
       return res.status(400).json({
         success: false,
-        message: "Resume must be a PDF file",
+        message: "Resume must be a genuine PDF file",
       });
     }
 
@@ -173,14 +226,16 @@ router.post("/about-image", (req, res) => {
       });
     }
 
-    if (
-      !["image/jpeg", "image/png", "image/webp"].includes(
-        req.file.mimetype
-      )
-    ) {
+    const isValidImage = await validateFileSignature(
+      req.file.buffer,
+      ALLOWED_IMAGE_TYPES,
+      req.file.mimetype,
+    );
+
+    if (!isValidImage || !ALLOWED_IMAGE_TYPES.includes(req.file.mimetype)) {
       return res.status(400).json({
         success: false,
-        message: "Profile image must be JPG, PNG, or WebP",
+        message: "Profile image must be a genuine JPG, PNG, or WebP file",
       });
     }
 

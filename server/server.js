@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import dns from "node:dns";
+import helmet from "helmet";
 
 import projectRoutes from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -19,7 +20,14 @@ dns.setServers(["1.1.1.1", "8.8.8.8"]);
 dotenv.config();
 
 const app = express();
+
+// Trust the single proxy hop in front of the Render Web Service
+app.set("trust proxy", 1);
+
 const PORT = process.env.PORT || 5000;
+
+// Security headers
+app.use(helmet());
 
 const allowedOrigins = [
   "http://localhost:5173",

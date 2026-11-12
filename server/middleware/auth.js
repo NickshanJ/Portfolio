@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import AdminSession from "../models/AdminSession.js";
 
-export function requireAdmin(req, res, next) {
+export async function requireAdmin(req, res, next) {
   const authorization = req.headers.authorization;
 
   if (!authorization?.startsWith("Bearer ")) {
@@ -13,25 +14,57 @@ export function requireAdmin(req, res, next) {
   const token = authorization.slice(7);
 
   try {
+    // Verify JWT signature and expiration.
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (decoded.role !== "admin") {
+    if (
+      decoded.role !== "admin" ||
+      !decoded.username ||
+      !decoded.jti
+    ) {
       return res.status(403).json({
         success: false,
         message: "Admin access required",
       });
     }
 
+    // Verify that this login session exists and is still active.
+    const session = await AdminSession.findOne({
+      jti: decoded.jti,
+      username: decoded.username,
+      revokedAt: null,
+      expiresAt: { $gt: new Date() },
+    }).lean();
+
+    if (!session) {
+      return res.status(401).json({
+        success: false,
+        message: "Session expired or revoked. Please log in again.",
+      });
+    }
+
     req.admin = {
       username: decoded.username,
       role: decoded.role,
+      sessionId: decoded.jti,
     };
 
     next();
-  } catch {
-    return res.status(401).json({
+  } catch (error) {
+    if (error.name === "JsonWebTokenError" ||
+        error.name === "TokenExpiredError" ||
+        error.name === "NotBeforeError") {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired token",
+      });
+    }
+
+    console.error("Admin authentication error:", error.message);
+
+    return res.status(500).json({
       success: false,
-      message: "Invalid or expired token",
+      message: "Unable to verify admin session",
     });
   }
 }

@@ -1,13 +1,16 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
 import { rateLimit } from "express-rate-limit";
+import AdminSession from "../models/AdminSession.js";
+import { requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 5, // Maximum 5 attempts per IP per window
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: {
@@ -15,7 +18,6 @@ const loginLimiter = rateLimit({
     message: "Too many login attempts. Please try again in 15 minutes.",
   },
 });
-
 
 router.post("/login", loginLimiter, async (req, res) => {
   try {
@@ -33,7 +35,11 @@ router.post("/login", loginLimiter, async (req, res) => {
       });
     }
 
-    if (!process.env.ADMIN_PASSWORD_HASH || !process.env.JWT_SECRET) {
+    if (
+      !process.env.ADMIN_USERNAME ||
+      !process.env.ADMIN_PASSWORD_HASH ||
+      !process.env.JWT_SECRET
+    ) {
       return res.status(500).json({
         success: false,
         message: "Admin authentication is not configured",
@@ -55,16 +61,31 @@ router.post("/login", loginLimiter, async (req, res) => {
       });
     }
 
+    // Generate a unique ID for this login session.
+    const jti = crypto.randomUUID();
+
+    // Set session expiration to 2 hours.
+    const expiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000);
+
+    // Save the session in MongoDB.
+    await AdminSession.create({
+      jti,
+      username: process.env.ADMIN_USERNAME,
+      expiresAt,
+    });
+
+    // Generate JWT containing the session ID.
     const token = jwt.sign(
       {
         username: process.env.ADMIN_USERNAME,
         role: "admin",
+        jti,
       },
       process.env.JWT_SECRET,
       { expiresIn: "2h" }
     );
 
-    res.json({
+    return res.json({
       success: true,
       message: "Login successful",
       token,
@@ -73,9 +94,38 @@ router.post("/login", loginLimiter, async (req, res) => {
   } catch (error) {
     console.error("Admin login failed:", error.message);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Unable to log in",
+    });
+  }
+});
+
+// Admin logout — revoke the current session.
+router.post("/logout", requireAdmin, async (req, res) => {
+  try {
+    await AdminSession.updateOne(
+      {
+        jti: req.admin.sessionId,
+        revokedAt: null,
+      },
+      {
+        $set: {
+          revokedAt: new Date(),
+        },
+      }
+    );
+
+    return res.json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.error("Admin logout failed:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to log out",
     });
   }
 });
