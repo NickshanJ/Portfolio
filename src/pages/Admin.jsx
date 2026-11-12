@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
+import { adminFetch, setUnauthorizedHandler } from "../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 const TOKEN_KEY = "portfolio_admin_token";
@@ -10,6 +11,19 @@ export default function Admin() {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Handle expired or invalid admin sessions globally.
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      sessionStorage.removeItem(TOKEN_KEY);
+      setToken("");
+      setError("Your admin session has expired. Please log in again.");
+    });
+
+    return () => {
+      setUnauthorizedHandler(null);
+    };
+  }, []);
 
   // Restore and validate an existing admin session.
   useEffect(() => {
@@ -26,20 +40,28 @@ export default function Admin() {
       }
 
       try {
-        const response = await fetch(`${API_URL}/api/admin/projects`, {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-          },
-        });
+        const response = await adminFetch(
+          `${API_URL}/api/admin/projects`,
+          {},
+          savedToken,
+        );
 
-        if (!response.ok) {
+        if (response.status === 401 || response.status === 403) {
           sessionStorage.removeItem(TOKEN_KEY);
 
           if (!cancelled) {
             setToken("");
+            setError("Your admin session has expired. Please log in again.");
           }
-        } else if (!cancelled) {
-          setToken(savedToken);
+        } else if (response.ok) {
+          if (!cancelled) {
+            setToken(savedToken);
+            setError("");
+          }
+        } else {
+          if (!cancelled) {
+            setError("Unable to verify your session. Please try again later.");
+          }
         }
       } catch {
         if (!cancelled) {
@@ -86,13 +108,10 @@ export default function Admin() {
 
       const savedToken = data.token;
 
-      const verificationResponse = await fetch(
+      const verificationResponse = await adminFetch(
         `${API_URL}/api/admin/projects`,
-        {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-          },
-        },
+        {},
+        savedToken,
       );
 
       if (!verificationResponse.ok) {
@@ -116,12 +135,11 @@ export default function Admin() {
     const currentToken = token;
 
     try {
-      const response = await fetch(`${API_URL}/api/auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${currentToken}`,
-        },
-      });
+      const response = await adminFetch(
+        `${API_URL}/api/auth/logout`,
+        { method: "POST" },
+        currentToken,
+      );
 
       if (!response.ok) {
         throw new Error("Server logout failed");

@@ -6,6 +6,7 @@ import SkillManagement from "./SkillManagement";
 import ProjectManagement from "./ProjectManagement";
 import ResumeManagement from "./ResumeManagement";
 import NJLogo from "../../assets/NJ.png";
+import { adminFetch } from "../../utils/api";
 import {
   FiGrid,
   FiHome,
@@ -52,7 +53,10 @@ export default function Dashboard({ token, onLogout }) {
 
   useEffect(() => {
     const nav = mobileNavRef.current;
-    const activeItem = mobileNavItemRefs.current[navigation.findIndex((item) => item.label === section)];
+    const activeItem =
+      mobileNavItemRefs.current[
+        navigation.findIndex((item) => item.label === section)
+      ];
 
     if (!nav || !activeItem) return;
 
@@ -72,9 +76,7 @@ export default function Dashboard({ token, onLogout }) {
     const leftRect = previousItem
       ? previousItem.getBoundingClientRect()
       : activeRect;
-    const rightRect = nextItem
-      ? nextItem.getBoundingClientRect()
-      : activeRect;
+    const rightRect = nextItem ? nextItem.getBoundingClientRect() : activeRect;
 
     if (leftRect.left < navRect.left) {
       nav.scrollTo({
@@ -96,14 +98,19 @@ export default function Dashboard({ token, onLogout }) {
       try {
         const API_URL =
           import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-        const response = await fetch(`${API_URL}/api/admin/skills`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await adminFetch(
+          `${API_URL}/api/admin/skills`,
+          {},
+          token,
+        );
         const data = await response.json();
 
-        if (response.ok && data.success && Array.isArray(data.skills) && isActive) {
+        if (
+          response.ok &&
+          data.success &&
+          Array.isArray(data.skills) &&
+          isActive
+        ) {
           setSkillCount(data.skills.length);
         }
       } catch {
@@ -373,7 +380,9 @@ export default function Dashboard({ token, onLogout }) {
                   </div>
                   <div className="mt-4 flex items-baseline gap-2">
                     <span className="text-3xl font-bold tracking-tight">
-                      {skillCount === null ? "—" : String(skillCount).padStart(2, "0")}
+                      {skillCount === null
+                        ? "—"
+                        : String(skillCount).padStart(2, "0")}
                     </span>
                     <span className="text-xs text-slate-500">skills</span>
                   </div>

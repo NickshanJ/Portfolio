@@ -5,6 +5,7 @@ import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import dns from "node:dns";
 import helmet from "helmet";
+import { requireAdmin } from "./middleware/auth.js";
 
 import projectRoutes from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -47,6 +48,8 @@ app.use(
 );
 
 app.use(express.json({ limit: "1mb" }));
+
+app.use("/api/admin", requireAdmin);
 
 app.use("/api/projects", projectRoutes);
 app.use("/api/auth", authRoutes);

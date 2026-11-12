@@ -1,11 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import Project from "../models/Project.js";
-import { requireAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
-
-router.use(requireAdmin);
 
 function validateProject(body) {
   const {
