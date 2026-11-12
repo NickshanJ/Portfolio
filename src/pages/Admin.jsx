@@ -110,11 +110,32 @@ export default function Admin() {
     }
   }
 
-  // Clear the session and return to the login screen.
-  function handleLogout() {
-    sessionStorage.removeItem(TOKEN_KEY);
-    setToken("");
-    setError("");
+  // Revoke the backend session and clear the local session.
+
+  async function handleLogout() {
+    const currentToken = token;
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Server logout failed");
+      }
+
+      sessionStorage.removeItem(TOKEN_KEY);
+      setToken("");
+      setError("");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setError(
+        "Unable to log out. Please check your connection and try again.",
+      );
+    }
   }
 
   if (checkingSession) {
