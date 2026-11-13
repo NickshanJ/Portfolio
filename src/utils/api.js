@@ -4,16 +4,10 @@ export function setUnauthorizedHandler(handler) {
   unauthorizedHandler = handler;
 }
 
-export async function adminFetch(url, options = {}, token) {
-  const headers = new Headers(options.headers || {});
-
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
+export async function adminFetch(url, options = {}) {
   const response = await fetch(url, {
     ...options,
-    headers,
+    credentials: "include",
   });
 
   if (response.status === 401) {

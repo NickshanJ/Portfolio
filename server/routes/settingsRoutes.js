@@ -1,6 +1,7 @@
 import express from "express";
 import SiteSettings from "../models/SiteSettings.js";
 import { requireAdmin } from "../middleware/auth.js";
+import { requireSameOrigin } from "../middleware/origin.js";
 
 const router = express.Router();
 
@@ -24,52 +25,57 @@ router.get("/resume", async (_req, res) => {
 });
 
 // Admin: Update the current resume URL and Cloudinary public ID
-router.put("/admin/resume", requireAdmin, async (req, res) => {
-  try {
-    const { resumeUrl, resumePublicId } = req.body;
+router.put(
+  "/admin/resume",
+  requireSameOrigin,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { resumeUrl, resumePublicId } = req.body;
 
-    if (
-      typeof resumeUrl !== "string" ||
-      !resumeUrl.startsWith("https://res.cloudinary.com/") ||
-      typeof resumePublicId !== "string" ||
-      !resumePublicId.trim()
-    ) {
-      return res.status(400).json({
+      if (
+        typeof resumeUrl !== "string" ||
+        !resumeUrl.startsWith("https://res.cloudinary.com/") ||
+        typeof resumePublicId !== "string" ||
+        !resumePublicId.trim()
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "A valid Cloudinary resume URL and public ID are required",
+        });
+      }
+
+      const settings = await SiteSettings.findOneAndUpdate(
+        { key: "global" },
+        {
+          $set: {
+            resumeUrl: resumeUrl.trim(),
+            resumePublicId: resumePublicId.trim(),
+          },
+          $setOnInsert: { key: "global" },
+        },
+        {
+          returnDocument: "after",
+          upsert: true,
+          runValidators: true,
+        },
+      );
+
+      res.json({
+        success: true,
+        message: "Resume settings updated successfully",
+        resumeUrl: settings.resumeUrl,
+      });
+    } catch (error) {
+      console.error("Failed to update resume settings:", error.message);
+
+      res.status(500).json({
         success: false,
-        message: "A valid Cloudinary resume URL and public ID are required",
+        message: "Unable to update resume settings",
       });
     }
-
-    const settings = await SiteSettings.findOneAndUpdate(
-      { key: "global" },
-      {
-        $set: {
-          resumeUrl: resumeUrl.trim(),
-          resumePublicId: resumePublicId.trim(),
-        },
-        $setOnInsert: { key: "global" },
-      },
-      {
-        returnDocument: "after",
-        upsert: true,
-        runValidators: true,
-      },
-    );
-
-    res.json({
-      success: true,
-      message: "Resume settings updated successfully",
-      resumeUrl: settings.resumeUrl,
-    });
-  } catch (error) {
-    console.error("Failed to update resume settings:", error.message);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to update resume settings",
-    });
-  }
-});
+  },
+);
 
 // GET /api/settings/home
 router.get("/home", async (_req, res) => {
@@ -115,7 +121,7 @@ router.get("/home", async (_req, res) => {
 });
 
 // PUT /api/settings/admin/home
-router.put("/admin/home", requireAdmin, async (req, res) => {
+router.put("/admin/home", requireSameOrigin, requireAdmin, async (req, res) => {
   try {
     const { roleTitles, description, experienceYears, terminalName } =
       req.body ?? {};

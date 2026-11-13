@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import { requireAdmin } from "../middleware/auth.js";
 import { fileTypeFromBuffer } from "file-type";
 import { rateLimit } from "express-rate-limit";
+import { requireSameOrigin } from "../middleware/origin.js";
 
 const router = express.Router();
 
@@ -73,6 +74,7 @@ function uploadToCloudinary(buffer, options) {
   });
 }
 
+router.use(requireSameOrigin);
 router.use(requireAdmin);
 router.use(uploadLimiter);
 
