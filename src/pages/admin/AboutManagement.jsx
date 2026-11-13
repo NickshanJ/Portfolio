@@ -10,7 +10,7 @@ const EMPTY_ABOUT = {
   infoItems: [],
 };
 
-export default function AboutManagement({ token }) {
+export default function AboutManagement() {
   const [about, setAbout] = useState(EMPTY_ABOUT);
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,13 +30,9 @@ export default function AboutManagement({ token }) {
 
     async function loadAbout() {
       try {
-        const response = await adminFetch(
-          `${API_URL}/api/admin/about`,
-          {
-            signal: controller.signal,
-          },
-          token,
-        );
+        const response = await adminFetch(`${API_URL}/api/admin/about`, {
+          signal: controller.signal,
+        });
 
         const data = await response.json();
 
@@ -65,7 +61,7 @@ export default function AboutManagement({ token }) {
 
     loadAbout();
     return () => controller.abort();
-  }, [token]);
+  }, []);
 
   function updateParagraph(index, text) {
     setAbout((current) => ({
@@ -136,14 +132,10 @@ export default function AboutManagement({ token }) {
     setUploading(true);
 
     try {
-      const response = await adminFetch(
-        `${API_URL}/api/uploads/about-image`,
-        {
-          method: "POST",
-          body: formData,
-        },
-        token,
-      );
+      const response = await adminFetch(`${API_URL}/api/uploads/about-image`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await response.json();
 
@@ -187,17 +179,13 @@ export default function AboutManagement({ token }) {
     try {
       const profileImage = await uploadImage();
 
-      const response = await adminFetch(
-        `${API_URL}/api/admin/about`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ profileImage, paragraphs, infoItems }),
+      const response = await adminFetch(`${API_URL}/api/admin/about`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-        token,
-      );
+        body: JSON.stringify({ profileImage, paragraphs, infoItems }),
+      });
 
       const data = await response.json();
 

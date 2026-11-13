@@ -2,10 +2,12 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 import dns from "node:dns";
 import helmet from "helmet";
 import { requireAdmin } from "./middleware/auth.js";
+import { requireSameOrigin } from "./middleware/origin.js";
 
 import projectRoutes from "./routes/projectRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -42,14 +44,16 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
+      return callback(null, false);
     },
+    credentials: true,
   }),
 );
 
 app.use(express.json({ limit: "1mb" }));
+app.use(cookieParser());
 
-app.use("/api/admin", requireAdmin);
+app.use("/api/admin", requireSameOrigin, requireAdmin);
 
 app.use("/api/projects", projectRoutes);
 app.use("/api/auth", authRoutes);

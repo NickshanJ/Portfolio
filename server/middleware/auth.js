@@ -1,17 +1,17 @@
 import jwt from "jsonwebtoken";
 import AdminSession from "../models/AdminSession.js";
 
-export async function requireAdmin(req, res, next) {
-  const authorization = req.headers.authorization;
+const COOKIE_NAME = "portfolio_admin_session";
 
-  if (!authorization?.startsWith("Bearer ")) {
+export async function requireAdmin(req, res, next) {
+  const token = req.cookies?.[COOKIE_NAME];
+
+  if (!token) {
     return res.status(401).json({
       success: false,
       message: "Authentication required",
     });
   }
-
-  const token = authorization.slice(7);
 
   try {
     // Verify JWT signature and expiration.
@@ -51,9 +51,11 @@ export async function requireAdmin(req, res, next) {
 
     next();
   } catch (error) {
-    if (error.name === "JsonWebTokenError" ||
-        error.name === "TokenExpiredError" ||
-        error.name === "NotBeforeError") {
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.name === "TokenExpiredError" ||
+      error.name === "NotBeforeError"
+    ) {
       return res.status(401).json({
         success: false,
         message: "Invalid or expired token",

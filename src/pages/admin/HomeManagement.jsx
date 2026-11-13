@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { adminFetch } from "../../utils/api";
 
@@ -22,7 +21,7 @@ const inputClass =
 
 const labelClass = "text-sm font-semibold text-slate-200";
 
-export default function HomeManagement({ token }) {
+export default function HomeManagement() {
   const [form, setForm] = useState(DEFAULT_HOME);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -138,7 +137,7 @@ export default function HomeManagement({ token }) {
     }
 
     try {
-      const response = await adminFetch(
+            const response = await adminFetch(
         `${API_URL}/api/settings/admin/home`,
         {
           method: "PUT",
@@ -152,7 +151,6 @@ export default function HomeManagement({ token }) {
             terminalName: form.terminalName.trim(),
           }),
         },
-        token,
       );
 
       const data = await response.json();
@@ -373,7 +371,3 @@ export default function HomeManagement({ token }) {
     </section>
   );
 }
-
-HomeManagement.propTypes = {
-  token: PropTypes.string.isRequired,
-};

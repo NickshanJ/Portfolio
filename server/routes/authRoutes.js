@@ -5,8 +5,19 @@ import crypto from "node:crypto";
 import { rateLimit } from "express-rate-limit";
 import AdminSession from "../models/AdminSession.js";
 import { requireAdmin } from "../middleware/auth.js";
+import { requireSameOrigin } from "../middleware/origin.js";
 
 const router = express.Router();
+
+const COOKIE_NAME = "portfolio_admin_session";
+
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV !== "development",
+  sameSite: "strict",
+  path: "/",
+  maxAge: 2 * 60 * 60 * 1000,
+});
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -19,7 +30,7 @@ const loginLimiter = rateLimit({
   },
 });
 
-router.post("/login", loginLimiter, async (req, res) => {
+router.post("/login", requireSameOrigin, loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body ?? {};
 
@@ -46,12 +57,11 @@ router.post("/login", loginLimiter, async (req, res) => {
       });
     }
 
-    const usernameMatches =
-      username === process.env.ADMIN_USERNAME;
+    const usernameMatches = username === process.env.ADMIN_USERNAME;
 
     const passwordMatches = await bcrypt.compare(
       password,
-      process.env.ADMIN_PASSWORD_HASH
+      process.env.ADMIN_PASSWORD_HASH,
     );
 
     if (!usernameMatches || !passwordMatches) {
@@ -82,13 +92,15 @@ router.post("/login", loginLimiter, async (req, res) => {
         jti,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "2h" },
     );
+
+    // Store JWT in an HttpOnly cookie.
+    res.cookie(COOKIE_NAME, token, getCookieOptions());
 
     return res.json({
       success: true,
       message: "Login successful",
-      token,
       expiresIn: 7200,
     });
   } catch (error) {
@@ -101,8 +113,8 @@ router.post("/login", loginLimiter, async (req, res) => {
   }
 });
 
-// Admin logout — revoke the current session.
-router.post("/logout", requireAdmin, async (req, res) => {
+// Admin logout — revoke the current session and clear the cookie.
+router.post("/logout", requireSameOrigin, requireAdmin, async (req, res) => {
   try {
     await AdminSession.updateOne(
       {
@@ -113,8 +125,13 @@ router.post("/logout", requireAdmin, async (req, res) => {
         $set: {
           revokedAt: new Date(),
         },
-      }
+      },
     );
+
+    res.clearCookie(COOKIE_NAME, {
+      ...getCookieOptions(),
+      maxAge: undefined,
+    });
 
     return res.json({
       success: true,

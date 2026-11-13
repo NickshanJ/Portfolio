@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { adminFetch } from "../../utils/api";
 
@@ -123,7 +122,7 @@ const emptyForm = {
   published: true,
 };
 
-export default function SkillManagement({ token }) {
+export default function SkillManagement() {
   const [skills, setSkills] = useState([]);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -141,11 +140,7 @@ export default function SkillManagement({ token }) {
     setError("");
 
     try {
-      const response = await adminFetch(
-        `${API_URL}/api/admin/skills`,
-        {},
-        token,
-      );
+      const response = await adminFetch(`${API_URL}/api/admin/skills`, {});
 
       const data = await response.json();
 
@@ -159,7 +154,7 @@ export default function SkillManagement({ token }) {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     loadSkills();
@@ -236,7 +231,6 @@ export default function SkillManagement({ token }) {
           },
           body: JSON.stringify(payload),
         },
-        token,
       );
 
       const data = await response.json();
@@ -283,7 +277,6 @@ export default function SkillManagement({ token }) {
         {
           method: "DELETE",
         },
-        token,
       );
 
       const data = await response.json();
@@ -361,7 +354,6 @@ export default function SkillManagement({ token }) {
               published: item.published,
             }),
           },
-          token,
         );
 
         const data = await response.json();
@@ -736,7 +728,3 @@ export default function SkillManagement({ token }) {
     </section>
   );
 }
-
-SkillManagement.propTypes = {
-  token: PropTypes.string.isRequired,
-};

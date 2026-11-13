@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
-import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { adminFetch } from "../../utils/api";
+import PropTypes from "prop-types";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -22,7 +22,7 @@ function emptyProjectForm(initialOrder = 1) {
   };
 }
 
-function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
+function ProjectForm({ project, initialOrder, onCancel, onSaved }) {
   const [imageFile, setImageFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -64,7 +64,6 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
           method: "POST",
           body,
         },
-        token,
       );
 
       const data = await response.json();
@@ -124,7 +123,6 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
           },
           body: JSON.stringify(payload),
         },
-        token,
       );
 
       const data = await response.json();
@@ -358,7 +356,6 @@ function ProjectForm({ token, project, initialOrder, onCancel, onSaved }) {
 }
 
 ProjectForm.propTypes = {
-  token: PropTypes.string.isRequired,
   project: PropTypes.shape({
     _id: PropTypes.string,
     title: PropTypes.string,
@@ -379,7 +376,7 @@ ProjectForm.propTypes = {
   onSaved: PropTypes.func.isRequired,
 };
 
-function ProjectManagement({ token }) {
+function ProjectManagement() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -395,11 +392,7 @@ function ProjectManagement({ token }) {
     setError("");
 
     try {
-      const response = await adminFetch(
-        `${API_URL}/api/admin/projects`,
-        {},
-        token,
-      );
+      const response = await adminFetch(`${API_URL}/api/admin/projects`, {});
 
       const data = await response.json();
 
@@ -413,7 +406,7 @@ function ProjectManagement({ token }) {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     loadProjects();
@@ -454,7 +447,6 @@ function ProjectManagement({ token }) {
         {
           method: "DELETE",
         },
-        token,
       );
 
       const data = await response.json();
@@ -540,7 +532,6 @@ function ProjectManagement({ token }) {
               order: newOrder,
             }),
           },
-          token,
         );
 
         const data = await response.json();
@@ -636,7 +627,6 @@ function ProjectManagement({ token }) {
         <div className="rounded-2xl border border-white/10 bg-[#080d12]/90 shadow-[0_12px_40px_rgba(0,0,0,0.16)] p-4 sm:p-6 lg:p-7">
           <ProjectForm
             key={editingProject?._id || "new-project"}
-            token={token}
             project={editingProject}
             initialOrder={nextProjectOrder}
             onCancel={() => {
@@ -847,10 +837,6 @@ function ProjectManagement({ token }) {
     </section>
   );
 }
-
-ProjectManagement.propTypes = {
-  token: PropTypes.string.isRequired,
-};
 
 function DashboardIcon({ type = "overview" }) {
   if (type === "projects") {

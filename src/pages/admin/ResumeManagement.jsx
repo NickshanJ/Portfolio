@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import { adminFetch } from "../../utils/api";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-function ResumeManagement({ token }) {
+function ResumeManagement() {
   const [resumeUrl, setResumeUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -74,14 +73,10 @@ function ResumeManagement({ token }) {
       const formData = new FormData();
       formData.append("resume", selectedFile);
 
-      const uploadResponse = await adminFetch(
-        `${API_URL}/api/uploads/resume`,
-        {
-          method: "POST",
-          body: formData,
-        },
-        token,
-      );
+      const uploadResponse = await adminFetch(`${API_URL}/api/uploads/resume`, {
+        method: "POST",
+        body: formData,
+      });
 
       const uploadData = await uploadResponse.json();
 
@@ -101,7 +96,6 @@ function ResumeManagement({ token }) {
             resumePublicId: uploadData.publicId,
           }),
         },
-        token,
       );
 
       const saveData = await saveResponse.json();
@@ -261,9 +255,5 @@ function ResumeManagement({ token }) {
     </section>
   );
 }
-
-ResumeManagement.propTypes = {
-  token: PropTypes.string.isRequired,
-};
 
 export default ResumeManagement;

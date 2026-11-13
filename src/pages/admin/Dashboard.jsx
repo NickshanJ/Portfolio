@@ -45,7 +45,7 @@ DashboardIcon.propTypes = {
   ]),
 };
 
-export default function Dashboard({ token, onLogout }) {
+export default function Dashboard({ onLogout }) {
   const [section, setSection] = useState("Overview");
   const [skillCount, setSkillCount] = useState(null);
   const mobileNavRef = useRef(null);
@@ -98,11 +98,7 @@ export default function Dashboard({ token, onLogout }) {
       try {
         const API_URL =
           import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-        const response = await adminFetch(
-          `${API_URL}/api/admin/skills`,
-          {},
-          token,
-        );
+        const response = await adminFetch(`${API_URL}/api/admin/skills`, {});
         const data = await response.json();
 
         if (
@@ -123,7 +119,8 @@ export default function Dashboard({ token, onLogout }) {
     return () => {
       isActive = false;
     };
-  }, [token]);
+  }, []);
+
   const navigation = [
     { label: "Overview", icon: "overview", shortLabel: "Overview" },
     { label: "Home", icon: "home", shortLabel: "Home" },
@@ -497,11 +494,11 @@ export default function Dashboard({ token, onLogout }) {
               </div>
             </section>
           )}
-          {section === "Home" && <HomeManagement token={token} />}
-          {section === "About" && <AboutManagement token={token} />}
-          {section === "Skills" && <SkillManagement token={token} />}
-          {section === "Projects" && <ProjectManagement token={token} />}
-          {section === "Resume" && <ResumeManagement token={token} />}
+          {section === "Home" && <HomeManagement />}
+          {section === "About" && <AboutManagement />}
+          {section === "Skills" && <SkillManagement />}
+          {section === "Projects" && <ProjectManagement />}
+          {section === "Resume" && <ResumeManagement />}
         </div>
       </div>
     </main>
@@ -509,6 +506,5 @@ export default function Dashboard({ token, onLogout }) {
 }
 
 Dashboard.propTypes = {
-  token: PropTypes.string.isRequired,
   onLogout: PropTypes.func.isRequired,
 };
