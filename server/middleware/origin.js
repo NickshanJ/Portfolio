@@ -1,6 +1,7 @@
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:5173",
   "https://nickshanjportfolio.netlify.app",
+  "https://nickshanjportfolio.dpdns.org",
 ]);
 
 const SAFE_METHODS = new Set([
