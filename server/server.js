@@ -35,6 +35,7 @@ app.use(helmet());
 const allowedOrigins = [
   "http://localhost:5173",
   "https://nickshanjportfolio.netlify.app",
+  "https://nickshanjportfolio.dpdns.org",
 ];
 
 app.use(
