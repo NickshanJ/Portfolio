@@ -3,7 +3,7 @@ import Login from "./admin/Login";
 import Dashboard from "./admin/Dashboard";
 import { adminFetch, setUnauthorizedHandler } from "../utils/api";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV ? "http://localhost:5000" : "";
 
 export default function Admin() {
   const [checkingSession, setCheckingSession] = useState(true);
@@ -29,9 +29,7 @@ export default function Admin() {
 
     async function checkSession() {
       try {
-        const response = await adminFetch(
-          `${API_URL}/api/admin/projects`
-        );
+        const response = await adminFetch(`${API_URL}/api/admin/projects`);
 
         if (response.status === 401 || response.status === 403) {
           if (!cancelled) {
@@ -51,7 +49,7 @@ export default function Admin() {
       } catch {
         if (!cancelled) {
           setError(
-            "Unable to verify your session. Check that the backend is running."
+            "Unable to verify your session. Check that the backend is running.",
           );
         }
       } finally {
@@ -94,12 +92,12 @@ export default function Admin() {
 
       // Verify that the browser can use the newly issued cookie.
       const verificationResponse = await adminFetch(
-        `${API_URL}/api/admin/projects`
+        `${API_URL}/api/admin/projects`,
       );
 
       if (!verificationResponse.ok) {
         throw new Error(
-          "Login succeeded, but admin access could not be verified. Please try again."
+          "Login succeeded, but admin access could not be verified. Please try again.",
         );
       }
 
@@ -116,10 +114,9 @@ export default function Admin() {
   // Revoke the backend session and clear the HttpOnly cookie.
   async function handleLogout() {
     try {
-      const response = await adminFetch(
-        `${API_URL}/api/auth/logout`,
-        { method: "POST" }
-      );
+      const response = await adminFetch(`${API_URL}/api/auth/logout`, {
+        method: "POST",
+      });
 
       if (!response.ok) {
         throw new Error("Server logout failed");
@@ -130,7 +127,7 @@ export default function Admin() {
     } catch (error) {
       console.error("Logout failed:", error);
       setError(
-        "Unable to log out. Please check your connection and try again."
+        "Unable to log out. Please check your connection and try again.",
       );
     }
   }
@@ -138,9 +135,7 @@ export default function Admin() {
   if (checkingSession) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#030609] px-4 font-grotesk text-white">
-        <p className="text-sm text-slate-400">
-          Checking admin session...
-        </p>
+        <p className="text-sm text-slate-400">Checking admin session...</p>
       </main>
     );
   }
@@ -149,11 +144,5 @@ export default function Admin() {
     return <Dashboard onLogout={handleLogout} />;
   }
 
-  return (
-    <Login
-      onLogin={handleLogin}
-      loading={loading}
-      error={error}
-    />
-  );
+  return <Login onLogin={handleLogin} loading={loading} error={error} />;
 }

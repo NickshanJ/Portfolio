@@ -5,8 +5,7 @@ import { FiDownload, FiArrowRight } from "react-icons/fi";
 import SEO from "../seo/SEO";
 import seoData from "../seo/seoData";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "";
 
 const DEFAULT_HOME = {
   roleTitles: [

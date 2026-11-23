@@ -3,8 +3,7 @@ import { FiExternalLink, FiCode } from "react-icons/fi";
 import SEO from "../seo/SEO";
 import seoData from "../seo/seoData";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV ? "http://localhost:5000" : "";
 
 const getShortProjectTitle = (title = "") => {
   const words = title.trim().split(/\s+/).filter(Boolean);

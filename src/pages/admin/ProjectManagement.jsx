@@ -3,7 +3,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import { adminFetch } from "../../utils/api";
 import PropTypes from "prop-types";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV ? "http://localhost:5000" : "";
 
 function emptyProjectForm(initialOrder = 1) {
   return {

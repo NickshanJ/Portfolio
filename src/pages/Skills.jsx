@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SEO from "../seo/SEO";
 import seoData from "../seo/seoData";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+const API_URL = import.meta.env.DEV ? "http://localhost:5000" : "";
 
 // Compatibility mappings for skills already stored in MongoDB.
 // New skills should use Iconify identifiers directly.
